@@ -22,7 +22,7 @@ import { AssetDecomposeTransaction } from "./transaction/AssetDecomposeTransacti
 import { AssetMintOutput } from "./transaction/AssetMintOutput";
 import { AssetMintTransaction } from "./transaction/AssetMintTransaction";
 import { AssetOutPoint } from "./transaction/AssetOutPoint";
-import { AssetTransferInput } from "./transaction/AssetTransferInput";
+import { AssetTransferInput, Timelock } from "./transaction/AssetTransferInput";
 import { AssetTransferOutput } from "./transaction/AssetTransferOutput";
 import { AssetTransferTransaction } from "./transaction/AssetTransferTransaction";
 import { CreateWorldTransaction } from "./transaction/CreateWorldTransaction";
@@ -485,10 +485,16 @@ export class Core {
                   lockScriptHash?: H256 | string;
                   parameters?: Buffer[];
               };
+        timelock?: null | Timelock;
         lockScript?: Buffer;
         unlockScript?: Buffer;
     }): AssetTransferInput {
-        const { assetOutPoint, lockScript, unlockScript } = params;
+        const {
+            assetOutPoint,
+            timelock = null,
+            lockScript,
+            unlockScript
+        } = params;
         if (assetOutPoint !== null && typeof assetOutPoint !== "object") {
             throw Error(
                 `Expected assetOutPoint param to be either an AssetOutPoint or an object but found ${assetOutPoint}`
@@ -506,6 +512,7 @@ export class Core {
         checkIndex(index);
         checkAssetType(assetType);
         checkAmountU64(amount);
+        checkTimelock(timelock);
         if (lockScriptHash) {
             checkLockScriptHash(lockScriptHash);
         }
@@ -532,6 +539,7 @@ export class Core {
                               : undefined,
                           parameters
                       }),
+            timelock,
             lockScript,
             unlockScript
         });
@@ -823,6 +831,27 @@ function checkParameters(parameters: Buffer[]) {
             );
         }
     });
+}
+
+function checkTimelock(timelock: Timelock | null) {
+    if (timelock === null) {
+        return;
+    }
+    const { type, value } = timelock;
+    if (
+        type === "block" ||
+        type === "blockAge" ||
+        type === "time" ||
+        type === "timeAge"
+    ) {
+        return;
+    }
+    if (typeof value === "number") {
+        return;
+    }
+    throw Error(
+        `Expected timelock param to be either null or an object containing both type and value but found ${timelock}`
+    );
 }
 
 function checkLockScript(lockScript: Buffer) {
