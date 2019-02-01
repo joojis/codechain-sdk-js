@@ -46,6 +46,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
      * @param output.recipient A recipient of the output.
      */
     addOutputs(outputs: AssetTransferOutputValue | Array<AssetTransferOutputValue>, ...rest: Array<AssetTransferOutputValue>): TransferAsset;
+    output(index: number): AssetTransferOutput | null;
     /**
      * Add an Order to create.
      * @param params.order An order to apply to the transfer transaction.
