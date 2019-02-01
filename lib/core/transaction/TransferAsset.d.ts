@@ -29,6 +29,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
      * @returns The TransferAsset, which is modified by adding them.
      */
     addBurns(burns: AssetTransferInput | Asset | Array<AssetTransferInput | Asset>, ...rest: Array<AssetTransferInput | Asset>): TransferAsset;
+    burns(): AssetTransferInput[];
     burn(index: number): AssetTransferInput | null;
     /**
      * Add an AssetTransferInput to spend.
@@ -36,6 +37,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
      * @returns The TransferAsset, which is modified by adding them.
      */
     addInputs(inputs: AssetTransferInput | Asset | Array<AssetTransferInput | Asset>, ...rest: Array<AssetTransferInput | Asset>): TransferAsset;
+    inputs(): AssetTransferInput[];
     input(index: number): AssetTransferInput | null;
     /**
      * Add an AssetTransferOutput to create.
@@ -46,6 +48,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
      * @param output.recipient A recipient of the output.
      */
     addOutputs(outputs: AssetTransferOutputValue | Array<AssetTransferOutputValue>, ...rest: Array<AssetTransferOutputValue>): TransferAsset;
+    outputs(): AssetTransferOutput[];
     output(index: number): AssetTransferOutput | null;
     /**
      * Add an Order to create.
