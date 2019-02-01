@@ -21,6 +21,7 @@ export declare class MintAsset extends Transaction implements AssetTransaction {
      * @returns A transaction tracker.
      */
     tracker(): H256;
+    output(): AssetMintOutput;
     /**
      * Get the output of this transaction.
      * @returns An Asset.
