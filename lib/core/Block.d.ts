@@ -1,8 +1,6 @@
 /// <reference types="node" />
-import { PlatformAddress } from "codechain-primitives";
-import { H256 } from "./H256";
+import { H256, PlatformAddress, U256 } from "codechain-primitives";
 import { SignedTransaction } from "./SignedTransaction";
-import { U256 } from "./U256";
 export interface BlockData {
     parentHash: H256;
     timestamp: number;

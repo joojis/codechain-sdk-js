@@ -1,12 +1,8 @@
 /// <reference types="node" />
-import { AssetTransferAddress, PlatformAddress } from "codechain-primitives";
+import { AssetTransferAddress, H128, H160, H256, H512, PlatformAddress, U256, U64 } from "codechain-primitives";
 import { Asset } from "./Asset";
 import { AssetScheme } from "./AssetScheme";
 import { Block } from "./Block";
-import { H128 } from "./H128";
-import { H160 } from "./H160";
-import { H256 } from "./H256";
-import { H512 } from "./H512";
 import { Invoice } from "./Invoice";
 import { Script } from "./Script";
 import { SignedTransaction } from "./SignedTransaction";
@@ -32,8 +28,6 @@ import { TransferAsset } from "./transaction/TransferAsset";
 import { UnwrapCCC } from "./transaction/UnwrapCCC";
 import { WrapCCC } from "./transaction/WrapCCC";
 import { NetworkId } from "./types";
-import { U256 } from "./U256";
-import { U64 } from "./U64";
 export declare class Core {
     static classes: {
         H128: typeof H128;
@@ -292,6 +286,7 @@ export declare class Core {
         networkId?: NetworkId;
         metadata?: string;
         approvals?: string[];
+        expiration?: number;
     }): TransferAsset;
     createComposeAssetTransaction(params: {
         scheme: AssetScheme | {

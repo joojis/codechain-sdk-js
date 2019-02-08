@@ -1,7 +1,6 @@
-import { AssetTransferAddress, H160, PlatformAddress } from "codechain-primitives";
+import { AssetTransferAddress, H160, PlatformAddress, U64 } from "codechain-primitives";
 import { MintAsset } from "./transaction/MintAsset";
 import { NetworkId } from "./types";
-import { U64 } from "./U64";
 export interface AssetSchemeJSON {
     metadata: string;
     supply: string;

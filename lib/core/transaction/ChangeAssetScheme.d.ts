@@ -1,4 +1,5 @@
-import { H160, PlatformAddress } from "../classes";
+import { H160, H256 } from "codechain-primitives";
+import { PlatformAddress } from "../classes";
 import { Transaction } from "../Transaction";
 import { NetworkId } from "../types";
 export declare class ChangeAssetScheme extends Transaction {
@@ -14,6 +15,11 @@ export declare class ChangeAssetScheme extends Transaction {
         allowedScriptHashes: H160[];
         approvals: string[];
     });
+    /**
+     * Get the tracker of an ChangeAssetScheme.
+     * @returns A transaction hash.
+     */
+    tracker(): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
     protected actionToJSON(): any;

@@ -1,8 +1,7 @@
 /// <reference types="node" />
-import { H256 } from "./H256";
+import { H256, U64 } from "codechain-primitives";
 import { SignedTransaction } from "./SignedTransaction";
 import { NetworkId } from "./types";
-import { U64 } from "./U64";
 export interface AssetTransaction {
     tracker(): H256;
 }

@@ -1,8 +1,5 @@
 /// <reference types="node" />
-import { AssetTransferAddress } from "codechain-primitives";
-import { H160 } from "../H160";
-import { H256 } from "../H256";
-import { U64 } from "../U64";
+import { AssetTransferAddress, H160, H256, U64 } from "codechain-primitives";
 import { AssetOutPoint, AssetOutPointJSON } from "./AssetOutPoint";
 export interface OrderJSON {
     assetTypeFrom: string;

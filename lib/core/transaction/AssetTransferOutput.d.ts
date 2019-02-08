@@ -1,6 +1,5 @@
 /// <reference types="node" />
-import { AssetTransferAddress, H160 } from "codechain-primitives";
-import { U64 } from "../U64";
+import { AssetTransferAddress, H160, U64 } from "codechain-primitives";
 export interface AssetTransferOutputJSON {
     lockScriptHash: string;
     parameters: string[];

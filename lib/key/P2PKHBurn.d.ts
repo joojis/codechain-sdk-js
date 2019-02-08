@@ -1,6 +1,5 @@
 /// <reference types="node" />
-import { AssetTransferAddress, H160 } from "codechain-primitives";
-import { H256 } from "../core/H256";
+import { AssetTransferAddress, H160, H256 } from "codechain-primitives";
 import { NetworkId } from "../core/types";
 import { SignatureTag } from "../utils";
 import { KeyStore } from "./KeyStore";

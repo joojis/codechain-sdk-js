@@ -1,12 +1,8 @@
 /// <reference types="node" />
-import { PlatformAddress } from "codechain-primitives";
+import { H160, H256, H512, PlatformAddress, U256 } from "codechain-primitives";
 import { Asset } from "./Asset";
-import { H160 } from "./H160";
-import { H256 } from "./H256";
-import { H512 } from "./H512";
 import { Transaction } from "./Transaction";
 import { NetworkId } from "./types";
-import { U256 } from "./U256";
 /**
  * A [Transaction](tx.html) signed by a private key. It is possible to request
  * the CodeChain network to process this tx with the

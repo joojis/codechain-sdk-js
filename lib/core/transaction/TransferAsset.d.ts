@@ -9,6 +9,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
     private readonly _transaction;
     private readonly approvals;
     private readonly metadata;
+    private readonly expiration;
     constructor(input: {
         burns: AssetTransferInput[];
         inputs: AssetTransferInput[];
@@ -17,6 +18,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
         networkId: NetworkId;
         metadata: string;
         approvals: string[];
+        expiration: number | null;
     });
     /**
      * Get the tracker of an AssetDecomposeTransaction.

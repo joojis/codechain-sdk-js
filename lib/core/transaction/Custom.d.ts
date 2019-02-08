@@ -1,7 +1,7 @@
 /// <reference types="node" />
+import { U64 } from "codechain-primitives";
 import { Transaction } from "../Transaction";
 import { NetworkId } from "../types";
-import { U64 } from "../U64";
 export declare class Custom extends Transaction {
     private readonly handlerId;
     private readonly bytes;

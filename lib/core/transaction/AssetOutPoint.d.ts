@@ -1,7 +1,5 @@
 /// <reference types="node" />
-import { H160 } from "../H160";
-import { H256 } from "../H256";
-import { U64 } from "../U64";
+import { H160, H256, U64 } from "codechain-primitives";
 export interface AssetOutPointJSON {
     tracker: string;
     index: number;

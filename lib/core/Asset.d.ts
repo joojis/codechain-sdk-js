@@ -1,11 +1,9 @@
 /// <reference types="node" />
-import { AssetTransferAddress, H160 } from "codechain-primitives";
-import { H256 } from "./H256";
+import { AssetTransferAddress, H160, H256, U64 } from "codechain-primitives";
 import { AssetOutPoint } from "./transaction/AssetOutPoint";
 import { AssetTransferInput, Timelock } from "./transaction/AssetTransferInput";
 import { TransferAsset } from "./transaction/TransferAsset";
 import { NetworkId } from "./types";
-import { U64 } from "./U64";
 export interface AssetJSON {
     assetType: string;
     lockScriptHash: string;
@@ -52,5 +50,6 @@ export declare class Asset {
         networkId: NetworkId;
         metadata?: string;
         approvals?: string[];
+        expiration?: number;
     }): TransferAsset;
 }

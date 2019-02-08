@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { U64 } from "../U64";
+import { U64 } from "codechain-primitives";
 import { Order, OrderJSON } from "./Order";
 export interface OrderOnTransferJSON {
     order: OrderJSON;

@@ -1,4 +1,3 @@
-import { H256 } from "../core/H256";
 import { Rpc } from ".";
 export declare class NetworkRpc {
     private rpc;
@@ -6,15 +5,6 @@ export declare class NetworkRpc {
      * @hidden
      */
     constructor(rpc: Rpc);
-    /**
-     * Save secret which is used when handshaking with other node,
-     * This secret may be exchanged in offline.
-     * To use this saved secret, you should call 'net_connect' RPC after this RPC call.
-     * @param secret Secret exchanged in offline
-     * @param address Node address which RPC server will connect to using secret
-     * @param port
-     */
-    shareSecret(secret: H256 | string, address: string, port: number): Promise<null>;
     /**
      * Connect to node
      * @param address Node address which to connect
