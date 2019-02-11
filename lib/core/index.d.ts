@@ -11,10 +11,8 @@ import { AssetOutPoint } from "./transaction/AssetOutPoint";
 import { AssetTransferInput, Timelock } from "./transaction/AssetTransferInput";
 import { AssetTransferOutput } from "./transaction/AssetTransferOutput";
 import { ChangeAssetScheme } from "./transaction/ChangeAssetScheme";
-import { ComposeAsset } from "./transaction/ComposeAsset";
 import { CreateShard } from "./transaction/CreateShard";
 import { Custom } from "./transaction/Custom";
-import { DecomposeAsset } from "./transaction/DecomposeAsset";
 import { MintAsset } from "./transaction/MintAsset";
 import { Order } from "./transaction/Order";
 import { OrderOnTransfer } from "./transaction/OrderOnTransfer";
@@ -288,26 +286,6 @@ export declare class Core {
         approvals?: string[];
         expiration?: number;
     }): TransferAsset;
-    createComposeAssetTransaction(params: {
-        scheme: AssetScheme | {
-            shardId: number;
-            metadata: string;
-            supply?: U64 | number | string | null;
-            approver?: PlatformAddress | string;
-            administrator?: PlatformAddress | string;
-            allowedScriptHashes?: H160[];
-            networkId?: NetworkId;
-        };
-        inputs: AssetTransferInput[];
-        recipient: AssetTransferAddress | string;
-        approvals?: string[];
-    }): ComposeAsset;
-    createDecomposeAssetTransaction(params: {
-        input: AssetTransferInput;
-        outputs?: AssetTransferOutput[];
-        networkId?: NetworkId;
-        approvals?: string[];
-    }): DecomposeAsset;
     createUnwrapCCCTransaction(params: {
         burn: AssetTransferInput | Asset;
         networkId?: NetworkId;

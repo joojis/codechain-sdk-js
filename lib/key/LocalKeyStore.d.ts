@@ -1,8 +1,23 @@
 import { CCKey } from "codechain-keystore";
 import { KeyStore } from "./KeyStore";
+export interface HDKeyMapping {
+    platform: {
+        [key: string]: {
+            seedHash: string;
+            path: string;
+        };
+    };
+    asset: {
+        [key: string]: {
+            seedHash: string;
+            path: string;
+        };
+    };
+}
 export declare class LocalKeyStore implements KeyStore {
     static create(options?: {
         dbPath?: string;
+        mapping?: HDKeyMapping;
     }): Promise<KeyStore>;
     static createForTest(): Promise<KeyStore>;
     cckey: CCKey;
@@ -50,6 +65,7 @@ export declare class LocalKeyStore implements KeyStore {
             passphrase?: string | undefined;
         }) => Promise<string>;
     };
-    constructor(cckey: CCKey);
+    private hdKeyMapping;
+    constructor(cckey: CCKey, hdKeyMapping?: HDKeyMapping);
     close(): Promise<void>;
 }
