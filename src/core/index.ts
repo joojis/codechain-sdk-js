@@ -182,23 +182,27 @@ export class Core {
                   lockScriptHash: H160 | string;
                   parameters: Buffer[];
                   quantity: U64 | number | string;
+                  payer: PlatformAddress | string;
               }
             | {
                   shardId: number;
                   recipient: AssetTransferAddress | string;
                   quantity: U64 | number | string;
+                  payer: PlatformAddress | string;
               }
     ): WrapCCC {
-        const { shardId, quantity } = params;
+        const { shardId, quantity, payer } = params;
         checkShardId(shardId);
         checkAmount(quantity);
+        checkPayer(payer);
         let data;
         if ("recipient" in params) {
             checkAssetTransferAddressRecipient(params.recipient);
             data = {
                 shardId,
                 recipient: AssetTransferAddress.ensure(params.recipient),
-                quantity: U64.ensure(quantity)
+                quantity: U64.ensure(quantity),
+                payer: PlatformAddress.ensure(payer)
             };
         } else {
             const { lockScriptHash, parameters } = params;
@@ -208,7 +212,8 @@ export class Core {
                 shardId,
                 lockScriptHash: H160.ensure(lockScriptHash),
                 parameters,
-                quantity: U64.ensure(quantity)
+                quantity: U64.ensure(quantity),
+                payer: PlatformAddress.ensure(payer)
             };
         }
         return new WrapCCC(data, this.networkId);
@@ -925,6 +930,14 @@ function checkCertifier(certifier: PlatformAddress | string) {
     if (!PlatformAddress.check(certifier)) {
         throw Error(
             `Expected certifier param to be a PlatformAddress but found ${certifier}`
+        );
+    }
+}
+
+function checkPayer(payer: PlatformAddress | string) {
+    if (!PlatformAddress.check(payer)) {
+        throw Error(
+            `Expected payer param to be a PlatformAddress but found ${payer}`
         );
     }
 }
