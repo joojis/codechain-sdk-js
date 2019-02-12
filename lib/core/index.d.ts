@@ -144,10 +144,12 @@ export declare class Core {
         lockScriptHash: H160 | string;
         parameters: Buffer[];
         quantity: U64 | number | string;
+        payer: PlatformAddress | string;
     } | {
         shardId: number;
         recipient: AssetTransferAddress | string;
         quantity: U64 | number | string;
+        payer: PlatformAddress | string;
     }): WrapCCC;
     /**
      * Creates Store type which store content with certifier on chain.

@@ -1,6 +1,7 @@
 /// <reference types="node" />
+import { H160, PlatformAddress, U64 } from "codechain-primitives";
 import { Asset } from "../Asset";
-import { AssetTransferAddress, H160, U64 } from "../classes";
+import { AssetTransferAddress } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { NetworkId } from "../types";
 export interface WrapCCCData {
@@ -8,17 +9,20 @@ export interface WrapCCCData {
     lockScriptHash: H160;
     parameters: Buffer[];
     quantity: U64;
+    payer: PlatformAddress;
 }
 export interface WrapCCCAddressData {
     shardId: number;
     recipient: AssetTransferAddress;
     quantity: U64;
+    payer: PlatformAddress;
 }
 export declare class WrapCCC extends Transaction implements AssetTransaction {
     private readonly shardId;
     private readonly lockScriptHash;
     private readonly parameters;
     private readonly quantity;
+    private readonly payer;
     constructor(data: WrapCCCData | WrapCCCAddressData, networkId: NetworkId);
     /**
      * Get the asset type of the output.
@@ -30,7 +34,7 @@ export declare class WrapCCC extends Transaction implements AssetTransaction {
      * @returns An Asset.
      */
     getAsset(): Asset;
-    tracker(): import("codechain-primitives/lib/value/H256").H256;
+    tracker(): import("codechain-primitives/lib").H256;
     type(): string;
     protected actionToEncodeObject(): any[];
     protected actionToJSON(): any;
