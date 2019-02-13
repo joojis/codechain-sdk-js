@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { H160, H256, H512, PlatformAddress, U256 } from "codechain-primitives";
+import { H160, H256, H512, PlatformAddress } from "codechain-primitives";
 import { Asset } from "./Asset";
 import { Transaction } from "./Transaction";
 import { NetworkId } from "./types";
@@ -18,42 +18,23 @@ import { NetworkId } from "./types";
  * - A seq is not identical to the signer's seq.
  */
 export declare class SignedTransaction {
-    /**
-     * Convert r, s, v values of an ECDSA signature to a string.
-     * @param params.r The r value of an ECDSA signature, which is up to 32 bytes of hexadecimal string.
-     * @param params.s The s value of an ECDSA signature, which is up to 32 bytes of hexadecimal string.
-     * @param params.v The recovery parameter of an ECDSA signature.
-     * @returns A 65 byte hexadecimal string.
-     */
-    static convertRsvToSignatureString(params: {
-        r: string;
-        s: string;
-        v: number;
-    }): string;
-    private static convertSignatureStringToRsv;
     unsigned: Transaction;
-    v: number;
-    r: U256;
-    s: U256;
     blockNumber: number | null;
     blockHash: H256 | null;
     transactionIndex: number | null;
+    private _signature;
     /**
      * @param unsigned A Transaction.
-     * @param sig An ECDSA signature which is a 65 byte hexadecimal string.
+     * @param signature An ECDSA signature which is a 65 byte hexadecimal string.
      * @param blockNumber The block number of the block that contains the tx.
      * @param blockHash The hash of the block that contains the tx.
      * @param transactionIndex The index(location) of the tx within the block.
      */
-    constructor(unsigned: Transaction, sig: string, blockNumber?: number, blockHash?: H256, transactionIndex?: number);
+    constructor(unsigned: Transaction, signature: string, blockNumber?: number, blockHash?: H256, transactionIndex?: number);
     /**
      * Get the signature of a tx.
      */
-    signature(): {
-        v: number;
-        r: U256;
-        s: U256;
-    };
+    signature(): string;
     /**
      * Convert to an object for RLP encoding.
      */

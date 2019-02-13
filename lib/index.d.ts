@@ -15,9 +15,9 @@ declare class SDK {
         blake256: (data: string | Buffer) => string;
         blake256WithKey: (data: string | Buffer, key: Uint8Array) => string;
         ripemd160: (data: string | Buffer) => string;
-        signEcdsa: (message: string, priv: string) => import("./utils").EcdsaSignature;
-        verifyEcdsa: (message: string, signature: import("./utils").EcdsaSignature, pub: string) => boolean;
-        recoverEcdsa: (message: string, signature: import("./utils").EcdsaSignature) => string;
+        signEcdsa: (message: string, priv: string) => string;
+        verifyEcdsa: (message: string, signature: string, pub: string) => boolean;
+        recoverEcdsa: (message: string, signature: string) => string;
         generatePrivateKey: () => string;
         getAccountIdFromPrivate: (priv: string) => string;
         getPublicFromPrivate: (priv: string) => string;
@@ -34,9 +34,9 @@ declare class SDK {
         blake256: (data: string | Buffer) => string;
         blake256WithKey: (data: string | Buffer, key: Uint8Array) => string;
         ripemd160: (data: string | Buffer) => string;
-        signEcdsa: (message: string, priv: string) => import("./utils").EcdsaSignature;
-        verifyEcdsa: (message: string, signature: import("./utils").EcdsaSignature, pub: string) => boolean;
-        recoverEcdsa: (message: string, signature: import("./utils").EcdsaSignature) => string;
+        signEcdsa: (message: string, priv: string) => string;
+        verifyEcdsa: (message: string, signature: string, pub: string) => boolean;
+        recoverEcdsa: (message: string, signature: string) => string;
         generatePrivateKey: () => string;
         getAccountIdFromPrivate: (priv: string) => string;
         getPublicFromPrivate: (priv: string) => string;

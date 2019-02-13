@@ -58,33 +58,29 @@ export interface SignatureTag {
  * @hidden
  */
 export declare const encodeSignatureTag: (tag: SignatureTag) => Buffer;
-export interface EcdsaSignature {
-    r: string;
-    s: string;
-    v: number;
-}
+export declare type EcdsaSignature = string;
 /**
  * Gets signature for message from private key.
  * @param message arbitrary length string
- * @param priv 32 byte hexadecimal string of private key
- * @returns r, s, v of ECDSA signature
+ * @param priv 32 byte hexstring of private key
+ * @returns 65 byte hexstring of ECDSA signature
  */
-export declare const signEcdsa: (message: string, priv: string) => EcdsaSignature;
+export declare const signEcdsa: (message: string, priv: string) => string;
 /**
  * Checks if the signature from signEcdsa is correct.
  * @param message arbitrary length string
- * @param signature r, s, v of ECDSA signature
- * @param pub 64 byte hexadecimal string of public key
+ * @param signature 65 byte hexstring of ECDSA signature
+ * @param pub 64 byte hexstring of public key
  * @returns if signature is valid, true. Else false.
  */
-export declare const verifyEcdsa: (message: string, signature: EcdsaSignature, pub: string) => boolean;
+export declare const verifyEcdsa: (message: string, signature: string, pub: string) => boolean;
 /**
  * Gets public key from the message and signature.
  * @param message arbitrary length string
- * @param signature r, s, v of ECDSA signature
- * @returns 64 byte hexadecimal string public key
+ * @param signature 65 byte hexstring of ECDSA signature
+ * @returns 64 byte hexstring public key
  */
-export declare const recoverEcdsa: (message: string, signature: EcdsaSignature) => string;
+export declare const recoverEcdsa: (message: string, signature: string) => string;
 /**
  * Generates a private key.
  * @returns 32 byte hexadecimal string of private key
