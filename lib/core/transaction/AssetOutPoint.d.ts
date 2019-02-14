@@ -7,7 +7,7 @@ export interface AssetOutPointJSON {
     shardId: number;
     quantity: string;
     lockScriptHash?: string;
-    parameters?: Buffer[];
+    parameters?: string[];
 }
 export interface AssetOutPointData {
     tracker: H256;
