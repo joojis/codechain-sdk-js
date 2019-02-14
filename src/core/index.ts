@@ -22,6 +22,7 @@ import { AssetTransferOutput } from "./transaction/AssetTransferOutput";
 import { ChangeAssetScheme } from "./transaction/ChangeAssetScheme";
 import { CreateShard } from "./transaction/CreateShard";
 import { Custom } from "./transaction/Custom";
+import { IncreaseAssetSupply } from "./transaction/IncreaseAssetSupply";
 import { MintAsset } from "./transaction/MintAsset";
 import { Order } from "./transaction/Order";
 import { OrderOnTransfer } from "./transaction/OrderOnTransfer";
@@ -553,7 +554,7 @@ export class Core {
                   approver?: PlatformAddress | string;
                   administrator?: PlatformAddress | string;
                   allowedScriptHashes?: H160[];
-                  supply?: U64 | number | string | null;
+                  supply?: U64 | number | string;
               };
         recipient: AssetTransferAddress | string;
         approvals?: string[];
@@ -571,7 +572,7 @@ export class Core {
             approver: approver = null,
             administrator: administrator = null,
             allowedScriptHashes = null,
-            supply
+            supply = U64.MAX_VALUE,
         } = scheme;
         checkAssetTransferAddressRecipient(recipient);
         checkNetworkId(networkId);
@@ -582,9 +583,7 @@ export class Core {
         checkMetadata(metadata);
         checkApprover(approver);
         checkAdministrator(administrator);
-        if (supply != null) {
-            checkAmount(supply);
-        }
+        checkAmount(supply);
         return new MintAsset({
             networkId,
             shardId,
@@ -598,7 +597,7 @@ export class Core {
                 allowedScriptHashes == null ? [] : allowedScriptHashes,
             metadata,
             output: new AssetMintOutput({
-                supply: supply == null ? null : U64.ensure(supply),
+                supply: U64.ensure(supply),
                 recipient: AssetTransferAddress.ensure(recipient)
             }),
             approvals
@@ -650,6 +649,36 @@ export class Core {
                     : PlatformAddress.ensure(administrator),
             allowedScriptHashes:
                 allowedScriptHashes == null ? [] : allowedScriptHashes,
+            approvals
+        });
+    }
+
+    public createIncreaseAssetSupplyTransaction(params: {
+        shardId: number;
+        assetType: H160 | string;
+        recipient: AssetTransferAddress | string;
+        supply?: U64 | number | string;
+        approvals?: string[];
+    }): IncreaseAssetSupply {
+        const {
+            shardId,
+            assetType,
+            recipient,
+            supply = U64.MAX_VALUE,
+            approvals = []
+        } = params;
+        checkNetworkId(this.networkId);
+        checkShardId(shardId);
+        checkAssetType(assetType);
+        checkAmount(supply);
+        return new IncreaseAssetSupply({
+            networkId: this.networkId,
+            shardId,
+            assetType: H160.ensure(assetType),
+            output: new AssetMintOutput({
+                supply: U64.ensure(supply),
+                recipient: AssetTransferAddress.ensure(recipient)
+            }),
             approvals
         });
     }
