@@ -572,7 +572,7 @@ export class Core {
             approver: approver = null,
             administrator: administrator = null,
             allowedScriptHashes = null,
-            supply = U64.MAX_VALUE,
+            supply = U64.MAX_VALUE
         } = scheme;
         checkAssetTransferAddressRecipient(recipient);
         checkNetworkId(networkId);
