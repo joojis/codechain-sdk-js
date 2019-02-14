@@ -3,7 +3,7 @@ import { AssetTransferAddress, H160, U64 } from "codechain-primitives";
 export interface AssetMintOutputJSON {
     lockScriptHash: string;
     parameters: string[];
-    supply?: string | null;
+    supply: string;
 }
 export declare class AssetMintOutput {
     /**
@@ -14,7 +14,7 @@ export declare class AssetMintOutput {
     static fromJSON(data: AssetMintOutputJSON): AssetMintOutput;
     readonly lockScriptHash: H160;
     readonly parameters: Buffer[];
-    readonly supply?: U64 | null;
+    readonly supply: U64;
     /**
      * @param data.lockScriptHash A lock script hash of the output.
      * @param data.parameters Parameters of the output.
@@ -23,10 +23,10 @@ export declare class AssetMintOutput {
     constructor(data: {
         lockScriptHash: H160;
         parameters: Buffer[];
-        supply?: U64 | null;
+        supply: U64;
     } | {
         recipient: AssetTransferAddress;
-        supply?: U64 | null;
+        supply: U64;
     });
     /**
      * Convert to an AssetMintOutput JSON object.

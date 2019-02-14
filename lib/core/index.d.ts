@@ -3,7 +3,6 @@ import { AssetTransferAddress, H128, H160, H256, H512, PlatformAddress, U256, U6
 import { Asset } from "./Asset";
 import { AssetScheme } from "./AssetScheme";
 import { Block } from "./Block";
-import { Invoice } from "./Invoice";
 import { Script } from "./Script";
 import { SignedTransaction } from "./SignedTransaction";
 import { Transaction } from "./Transaction";
@@ -13,6 +12,7 @@ import { AssetTransferOutput } from "./transaction/AssetTransferOutput";
 import { ChangeAssetScheme } from "./transaction/ChangeAssetScheme";
 import { CreateShard } from "./transaction/CreateShard";
 import { Custom } from "./transaction/Custom";
+import { IncreaseAssetSupply } from "./transaction/IncreaseAssetSupply";
 import { MintAsset } from "./transaction/MintAsset";
 import { Order } from "./transaction/Order";
 import { OrderOnTransfer } from "./transaction/OrderOnTransfer";
@@ -34,7 +34,6 @@ export declare class Core {
         H512: typeof H512;
         U256: typeof U256;
         U64: typeof U64;
-        Invoice: typeof Invoice;
         Block: typeof Block;
         Transaction: typeof Transaction;
         SignedTransaction: typeof SignedTransaction;
@@ -63,7 +62,6 @@ export declare class Core {
         H512: typeof H512;
         U256: typeof U256;
         U64: typeof U64;
-        Invoice: typeof Invoice;
         Block: typeof Block;
         Transaction: typeof Transaction;
         SignedTransaction: typeof SignedTransaction;
@@ -261,7 +259,7 @@ export declare class Core {
             approver?: PlatformAddress | string;
             administrator?: PlatformAddress | string;
             allowedScriptHashes?: H160[];
-            supply?: U64 | number | string | null;
+            supply?: U64 | number | string;
         };
         recipient: AssetTransferAddress | string;
         approvals?: string[];
@@ -278,6 +276,13 @@ export declare class Core {
         };
         approvals?: string[];
     }): ChangeAssetScheme;
+    createIncreaseAssetSupplyTransaction(params: {
+        shardId: number;
+        assetType: H160 | string;
+        recipient: AssetTransferAddress | string;
+        supply?: U64 | number | string;
+        approvals?: string[];
+    }): IncreaseAssetSupply;
     createTransferAssetTransaction(params?: {
         burns?: AssetTransferInput[];
         inputs?: AssetTransferInput[];

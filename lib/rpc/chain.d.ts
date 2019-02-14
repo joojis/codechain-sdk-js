@@ -3,7 +3,6 @@ import { Rpc } from ".";
 import { Asset } from "../core/Asset";
 import { AssetScheme } from "../core/AssetScheme";
 import { Block } from "../core/Block";
-import { Invoice } from "../core/Invoice";
 import { SignedTransaction } from "../core/SignedTransaction";
 import { Text } from "../core/Text";
 import { Transaction } from "../core/Transaction";
@@ -59,7 +58,7 @@ export declare class ChainRpc {
      */
     getInvoice(hash: H256 | string, options?: {
         timeout?: number;
-    }): Promise<Invoice | null>;
+    }): Promise<boolean | null>;
     /**
      * Gets the regular key of an account of given address, recorded in the block of given blockNumber. If blockNumber is not given, then returns the regular key in the most recent block.
      * @param address An account address
@@ -84,11 +83,11 @@ export declare class ChainRpc {
      * Gets invoice of a transaction of given tracker.
      * @param tracker The transaction hash of which to get the corresponding transaction of.
      * @param options.timeout Indicating milliseconds to wait the transaction to be confirmed.
-     * @returns Invoice, or null when transaction of given hash not exists.
+     * @returns boolean, or null when transaction of given hash not exists.
      */
     getInvoicesByTracker(tracker: H256 | string, options?: {
         timeout?: number;
-    }): Promise<Invoice[]>;
+    }): Promise<boolean[]>;
     /**
      * Gets balance of an account of given address, recorded in the block of given blockNumber. If blockNumber is not given, then returns balance recorded in the most recent block.
      * @param address An account address
@@ -96,6 +95,12 @@ export declare class ChainRpc {
      * @returns Balance of account at the specified block, or null if no such block exists.
      */
     getBalance(address: PlatformAddress | string, blockNumber?: number): Promise<U64>;
+    /**
+     * Gets a hint to find out why the transaction failed.
+     * @param transactionHash A transaction hash from which the error hint would get.
+     * @returns Null if the transaction is not involved in the chain or succeeded. If the transaction failed, this should return the reason for the transaction failing.
+     */
+    getErrorHint(transactionHash: H256 | string): Promise<string | null>;
     /**
      * Gets seq of an account of given address, recorded in the block of given blockNumber. If blockNumber is not given, then returns seq recorded in the most recent block.
      * @param address An account address
