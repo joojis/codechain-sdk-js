@@ -2,7 +2,19 @@ import { Asset } from "../Asset";
 import { AssetScheme, H160, H256, PlatformAddress } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { NetworkId } from "../types";
-import { AssetMintOutput } from "./AssetMintOutput";
+import { AssetMintOutput, AssetMintOutputJSON } from "./AssetMintOutput";
+export interface AssetMintTransactionJSON {
+    networkId: string;
+    shardId: number;
+    metadata: string;
+    output: AssetMintOutputJSON;
+    approver: string | null;
+    administrator: string | null;
+    allowedScriptHashes: string[];
+}
+export interface MintAssetActionJSON extends AssetMintTransactionJSON {
+    approvals: string[];
+}
 export declare class MintAsset extends Transaction implements AssetTransaction {
     private readonly _transaction;
     private readonly approvals;
@@ -44,5 +56,5 @@ export declare class MintAsset extends Transaction implements AssetTransaction {
     getAssetAddress(): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): MintAssetActionJSON;
 }

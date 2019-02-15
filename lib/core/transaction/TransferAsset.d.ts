@@ -3,8 +3,21 @@ import { Asset } from "../Asset";
 import { H256, Order, OrderOnTransfer, U64 } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { AssetTransferOutputValue, NetworkId } from "../types";
-import { AssetTransferInput } from "./AssetTransferInput";
-import { AssetTransferOutput } from "./AssetTransferOutput";
+import { AssetTransferInput, AssetTransferInputJSON } from "./AssetTransferInput";
+import { AssetTransferOutput, AssetTransferOutputJSON } from "./AssetTransferOutput";
+import { OrderOnTransferJSON } from "./OrderOnTransfer";
+export interface AssetTransferTransactionJSON {
+    networkId: string;
+    burns: AssetTransferInputJSON[];
+    inputs: AssetTransferInputJSON[];
+    outputs: AssetTransferOutputJSON[];
+    orders: OrderOnTransferJSON[];
+}
+export interface TransferAssetActionJSON extends AssetTransferTransactionJSON {
+    metadata: string;
+    approvals: string[];
+    expiration: number | null;
+}
 export declare class TransferAsset extends Transaction implements AssetTransaction {
     private readonly _transaction;
     private readonly approvals;
@@ -95,5 +108,5 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
     getAssetAddress(index: number): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): TransferAssetActionJSON;
 }

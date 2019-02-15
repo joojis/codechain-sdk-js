@@ -2,6 +2,10 @@
 import { U64 } from "codechain-primitives";
 import { Transaction } from "../Transaction";
 import { NetworkId } from "../types";
+export interface CustomActionJSON {
+    handlerId: string;
+    buffer: number[];
+}
 export declare class Custom extends Transaction {
     private readonly handlerId;
     private readonly bytes;
@@ -11,5 +15,5 @@ export declare class Custom extends Transaction {
     }, networkId: NetworkId);
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): CustomActionJSON;
 }

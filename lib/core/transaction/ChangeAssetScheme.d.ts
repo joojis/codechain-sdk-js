@@ -2,6 +2,18 @@ import { H160, H256 } from "codechain-primitives";
 import { PlatformAddress } from "../classes";
 import { Transaction } from "../Transaction";
 import { NetworkId } from "../types";
+export interface AssetSchemeChangeTransactionJSON {
+    networkId: string;
+    shardId: number;
+    assetType: string;
+    metadata: string;
+    approver: string | null;
+    administrator: string | null;
+    allowedScriptHashes: string[];
+}
+export interface ChangeAssetSchemeActionJSON extends AssetSchemeChangeTransactionJSON {
+    approvals: string[];
+}
 export declare class ChangeAssetScheme extends Transaction {
     private readonly _transaction;
     private readonly approvals;
@@ -21,6 +33,6 @@ export declare class ChangeAssetScheme extends Transaction {
      */
     tracker(): H256;
     type(): string;
-    protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToEncodeObject(): (any)[];
+    protected actionToJSON(): ChangeAssetSchemeActionJSON;
 }

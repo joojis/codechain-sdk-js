@@ -2,6 +2,15 @@ import { SignatureTag } from "../../utils";
 import { AssetTransferInput, H256 } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { NetworkId } from "../types";
+import { AssetTransferInputJSON } from "./AssetTransferInput";
+export interface AssetUnwrapCCCTransactionJSON {
+    networkId: string;
+    burn: AssetTransferInputJSON;
+}
+export interface UnwrapCCCActionJSON {
+    networkId: string;
+    burn: AssetTransferInputJSON;
+}
 export declare class UnwrapCCC extends Transaction implements AssetTransaction {
     private readonly _transaction;
     constructor(input: {
@@ -22,5 +31,5 @@ export declare class UnwrapCCC extends Transaction implements AssetTransaction {
     tracker(): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): UnwrapCCCActionJSON;
 }

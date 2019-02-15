@@ -4,7 +4,21 @@ import { AssetScheme } from "../AssetScheme";
 import { AssetTransferInput, H160, H256, PlatformAddress } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { NetworkId } from "../types";
-import { AssetMintOutput } from "./AssetMintOutput";
+import { AssetMintOutput, AssetMintOutputJSON } from "./AssetMintOutput";
+import { AssetTransferInputJSON } from "./AssetTransferInput";
+export interface AssetComposeTransactionJSON {
+    networkId: string;
+    shardId: number;
+    metadata: string;
+    approver: string | null;
+    administrator: string | null;
+    allowedScriptHashes: string[];
+    output: AssetMintOutputJSON;
+    inputs: AssetTransferInputJSON[];
+}
+export interface ComposeAssetActionJSON extends AssetComposeTransactionJSON {
+    approvals: string[];
+}
 export declare class ComposeAsset extends Transaction implements AssetTransaction {
     private readonly _transaction;
     private readonly approvals;
@@ -62,5 +76,5 @@ export declare class ComposeAsset extends Transaction implements AssetTransactio
     getAssetAddress(): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): ComposeAssetActionJSON;
 }

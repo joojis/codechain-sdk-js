@@ -1,7 +1,16 @@
 import { H160, H256 } from "codechain-primitives";
 import { Transaction } from "../Transaction";
 import { NetworkId } from "../types";
-import { AssetMintOutput } from "./AssetMintOutput";
+import { AssetMintOutput, AssetMintOutputJSON } from "./AssetMintOutput";
+export interface IncreaseAssetSupplyTransactionJSON {
+    networkId: string;
+    shardId: number;
+    assetType: string;
+    output: AssetMintOutputJSON;
+}
+export interface IncreaseAssetSupplyActionJSON extends IncreaseAssetSupplyTransactionJSON {
+    approvals: string[];
+}
 export declare class IncreaseAssetSupply extends Transaction {
     private readonly transaction;
     private readonly approvals;
@@ -15,5 +24,5 @@ export declare class IncreaseAssetSupply extends Transaction {
     tracker(): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): IncreaseAssetSupplyActionJSON;
 }

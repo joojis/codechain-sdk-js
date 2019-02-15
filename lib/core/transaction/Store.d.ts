@@ -2,6 +2,11 @@ import { H256, PlatformAddress } from "../classes";
 import { Text } from "../Text";
 import { Transaction } from "../Transaction";
 import { NetworkId } from "../types";
+export interface StoreActionJSON {
+    content: string;
+    certifier: string;
+    signature: string;
+}
 export declare class Store extends Transaction {
     private content;
     private certifier;
@@ -17,5 +22,5 @@ export declare class Store extends Transaction {
     getText(): Text;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): StoreActionJSON;
 }

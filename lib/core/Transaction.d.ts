@@ -1,9 +1,34 @@
 /// <reference types="node" />
 import { H256, U64 } from "codechain-primitives";
 import { SignedTransaction } from "./SignedTransaction";
+import { ChangeAssetSchemeActionJSON } from "./transaction/ChangeAssetScheme";
+import { ComposeAssetActionJSON } from "./transaction/ComposeAsset";
+import { CreateShardActionJSON } from "./transaction/CreateShard";
+import { CustomActionJSON } from "./transaction/Custom";
+import { DecomposeAssetActionJSON } from "./transaction/DecomposeAsset";
+import { IncreaseAssetSupplyActionJSON } from "./transaction/IncreaseAssetSupply";
+import { MintAssetActionJSON } from "./transaction/MintAsset";
+import { PayActionJSON } from "./transaction/Pay";
+import { RemoveActionJSON } from "./transaction/Remove";
+import { SetRegularKeyActionJSON } from "./transaction/SetRegularKey";
+import { SetShardOwnersActionJSON } from "./transaction/SetShardOwners";
+import { SetShardUsersActionJSON } from "./transaction/SetShardUsers";
+import { StoreActionJSON } from "./transaction/Store";
+import { TransferAssetActionJSON } from "./transaction/TransferAsset";
+import { UnwrapCCCActionJSON } from "./transaction/UnwrapCCC";
+import { WrapCCCActionJSON } from "./transaction/WrapCCC";
 import { NetworkId } from "./types";
 export interface AssetTransaction {
     tracker(): H256;
+}
+declare type ActionJSON = PayActionJSON | SetRegularKeyActionJSON | SetShardOwnersActionJSON | SetShardUsersActionJSON | IncreaseAssetSupplyActionJSON | CreateShardActionJSON | MintAssetActionJSON | TransferAssetActionJSON | ComposeAssetActionJSON | DecomposeAssetActionJSON | ChangeAssetSchemeActionJSON | StoreActionJSON | RemoveActionJSON | CustomActionJSON | WrapCCCActionJSON | UnwrapCCCActionJSON;
+export interface TransactionJSON {
+    action: ActionJSON & {
+        type: string;
+    };
+    networkId: string;
+    seq: number | null;
+    fee: string | null;
 }
 /**
  * A unit that collects transaction and requests processing to the network. A parsel signer pays for CCC processing fees.
@@ -32,8 +57,9 @@ export declare abstract class Transaction {
         seq: number;
         fee: U64 | string | number;
     }): SignedTransaction;
-    toJSON(): any;
+    toJSON(): TransactionJSON;
     abstract type(): string;
-    protected abstract actionToJSON(): any;
+    protected abstract actionToJSON(): ActionJSON;
     protected abstract actionToEncodeObject(): any[];
 }
+export {};

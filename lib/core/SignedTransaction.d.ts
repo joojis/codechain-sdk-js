@@ -1,8 +1,15 @@
 /// <reference types="node" />
 import { H160, H256, H512, PlatformAddress } from "codechain-primitives";
 import { Asset } from "./Asset";
-import { Transaction } from "./Transaction";
+import { Transaction, TransactionJSON } from "./Transaction";
 import { NetworkId } from "./types";
+export interface SignedTransactionJSON extends TransactionJSON {
+    blockNumber: number | null;
+    blockHash: string | null;
+    transactionIndex: number | null;
+    sig: string;
+    hash: string;
+}
 /**
  * A [Transaction](tx.html) signed by a private key. It is possible to request
  * the CodeChain network to process this tx with the
@@ -72,5 +79,5 @@ export declare class SignedTransaction {
      * Convert to a SignedTransaction JSON object.
      * @returns A SignedTransaction JSON object.
      */
-    toJSON(): any;
+    toJSON(): SignedTransactionJSON;
 }

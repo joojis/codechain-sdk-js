@@ -17,6 +17,13 @@ export interface WrapCCCAddressData {
     quantity: U64;
     payer: PlatformAddress;
 }
+export interface WrapCCCActionJSON {
+    shardId: number;
+    lockScriptHash: string;
+    parameters: string[];
+    quantity: string;
+    payer: string;
+}
 export declare class WrapCCC extends Transaction implements AssetTransaction {
     private readonly shardId;
     private readonly lockScriptHash;
@@ -37,5 +44,5 @@ export declare class WrapCCC extends Transaction implements AssetTransaction {
     tracker(): import("codechain-primitives/lib").H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): WrapCCCActionJSON;
 }

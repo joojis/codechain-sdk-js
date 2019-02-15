@@ -1,6 +1,16 @@
 import { Asset, AssetTransferInput, AssetTransferOutput, H256 } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { AssetTransferOutputValue, NetworkId } from "../types";
+import { AssetTransferInputJSON } from "./AssetTransferInput";
+import { AssetTransferOutputJSON } from "./AssetTransferOutput";
+export interface AssetDecomposeTransactionJSON {
+    input: AssetTransferInputJSON;
+    outputs: AssetTransferOutputJSON[];
+    networkId: string;
+}
+export interface DecomposeAssetActionJSON extends AssetDecomposeTransactionJSON {
+    approvals: string[];
+}
 export declare class DecomposeAsset extends Transaction implements AssetTransaction {
     private readonly _transaction;
     private readonly approvals;
@@ -47,5 +57,5 @@ export declare class DecomposeAsset extends Transaction implements AssetTransact
     getAssetAddress(index: number): H256;
     type(): string;
     protected actionToEncodeObject(): any[];
-    protected actionToJSON(): any;
+    protected actionToJSON(): DecomposeAssetActionJSON;
 }
