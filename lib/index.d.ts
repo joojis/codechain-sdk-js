@@ -41,6 +41,7 @@ declare class SDK {
         getAccountIdFromPrivate: (priv: string) => string;
         getPublicFromPrivate: (priv: string) => string;
     };
+    private _networkId;
     /**
      * @param params.server HTTP RPC server address
      * @param params.keyStoreType Specify the type of the keystore. The default value is "local". It creates keystore.db file on the working directory.
@@ -56,5 +57,6 @@ declare class SDK {
             transactionFee?: number;
         };
     });
+    readonly networkId: string;
 }
 export { SDK };
