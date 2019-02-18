@@ -9,7 +9,7 @@ export declare class NodeRpc {
      * Sends ping to check whether CodeChain's RPC server is responding or not.
      * @returns String "pong"
      */
-    ping(): Promise<string>;
+    ping(id?: string): Promise<string>;
     /**
      * Gets the version of CodeChain node.
      * @returns The version of CodeChain node (e.g. 0.1.0)
