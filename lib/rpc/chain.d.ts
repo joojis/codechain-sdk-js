@@ -73,6 +73,7 @@ export declare class ChainRpc {
      * @return The platform address that can use the regular key at the specified block.
      */
     getRegularKeyOwner(regularKey: H512 | string, blockNumber?: number): Promise<PlatformAddress | null>;
+    getShardIdByHash(hash: H256 | string, blockNumber?: number): Promise<number | null>;
     /**
      * Gets a transaction of given hash.
      * @param tracker The tracker of which to get the corresponding transaction of.
