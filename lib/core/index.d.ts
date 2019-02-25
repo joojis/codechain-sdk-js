@@ -113,7 +113,9 @@ export declare class Core {
     /**
      * Creates CreateShard type which can create new shard
      */
-    createCreateShardTransaction(): CreateShard;
+    createCreateShardTransaction(params: {
+        users: Array<PlatformAddress | string>;
+    }): CreateShard;
     createSetShardOwnersTransaction(params: {
         shardId: number;
         owners: Array<PlatformAddress | string>;

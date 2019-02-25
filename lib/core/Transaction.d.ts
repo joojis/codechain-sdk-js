@@ -51,7 +51,7 @@ export declare abstract class Transaction {
     networkId(): NetworkId;
     toEncodeObject(): any[];
     rlpBytes(): Buffer;
-    hash(): H256;
+    unsignedHash(): H256;
     sign(params: {
         secret: H256 | string;
         seq: number;

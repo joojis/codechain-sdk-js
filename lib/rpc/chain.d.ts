@@ -73,7 +73,25 @@ export declare class ChainRpc {
      * @return The platform address that can use the regular key at the specified block.
      */
     getRegularKeyOwner(regularKey: H512 | string, blockNumber?: number): Promise<PlatformAddress | null>;
+    /**
+     * Gets the shard id of the given hash of a CreateShard transaction.
+     * @param hash A transaction hash of a CreateShard transaction.
+     * @param blockNumber A block number.
+     * @returns A shard id.
+     */
     getShardIdByHash(hash: H256 | string, blockNumber?: number): Promise<number | null>;
+    /**
+     * Gets the owners of the shard.
+     * @param shardId A shard id.
+     * @returns The platform addresses of the owners.
+     */
+    getShardOwners(shardId: number, blockNumber?: number): Promise<PlatformAddress[] | null>;
+    /**
+     * Gets the users of the shard.
+     * @param shardId A shard id.
+     * @returns The platform addresses of the users.
+     */
+    getShardUsers(shardId: number, blockNumber?: number): Promise<PlatformAddress[] | null>;
     /**
      * Gets a transaction of given hash.
      * @param tracker The tracker of which to get the corresponding transaction of.
