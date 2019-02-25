@@ -112,7 +112,11 @@ export class ChainRpc {
         }
         tx.setFee(fee);
         const address = PlatformAddress.ensure(account);
-        const sig = await this.rpc.account.sign(tx.hash(), address, passphrase);
+        const sig = await this.rpc.account.sign(
+            tx.unsignedHash(),
+            address,
+            passphrase
+        );
         return this.sendSignedTransaction(new SignedTransaction(tx, sig));
     }
 
@@ -290,6 +294,12 @@ export class ChainRpc {
         });
     }
 
+    /**
+     * Gets the shard id of the given hash of a CreateShard transaction.
+     * @param hash A transaction hash of a CreateShard transaction.
+     * @param blockNumber A block number.
+     * @returns A shard id.
+     */
     public getShardIdByHash(
         hash: H256 | string,
         blockNumber?: number
@@ -317,6 +327,72 @@ export class ChainRpc {
                         reject(
                             Error(
                                 `Expected chain_getShardIdByHash to return either number or null but it returned ${result}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Gets the owners of the shard.
+     * @param shardId A shard id.
+     * @returns The platform addresses of the owners.
+     */
+    public getShardOwners(
+        shardId: number,
+        blockNumber?: number
+    ): Promise<PlatformAddress[] | null> {
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_getShardOwners", [shardId, blockNumber])
+                .then(result => {
+                    try {
+                        resolve(
+                            result === null
+                                ? null
+                                : (result as string[]).map(str =>
+                                      PlatformAddress.ensure(str)
+                                  )
+                        );
+                    } catch (e) {
+                        reject(
+                            Error(
+                                `Expected chain_getShardOwners to return either null or an array of PlatformAddress, but an error occurred: ${e.toString()}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Gets the users of the shard.
+     * @param shardId A shard id.
+     * @returns The platform addresses of the users.
+     */
+    public getShardUsers(
+        shardId: number,
+        blockNumber?: number
+    ): Promise<PlatformAddress[] | null> {
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_getShardUsers", [shardId, blockNumber])
+                .then(result => {
+                    try {
+                        resolve(
+                            result === null
+                                ? null
+                                : (result as string[]).map(str =>
+                                      PlatformAddress.ensure(str)
+                                  )
+                        );
+                    } catch (e) {
+                        reject(
+                            Error(
+                                `Expected chain_getShardUsers to return either null or an array of PlatformAddress, but an error occurred: ${e.toString()}`
                             )
                         );
                     }
