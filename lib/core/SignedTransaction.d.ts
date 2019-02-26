@@ -7,6 +7,7 @@ export interface SignedTransactionJSON extends TransactionJSON {
     blockNumber: number | null;
     blockHash: string | null;
     transactionIndex: number | null;
+    result: boolean | null;
     sig: string;
     hash: string;
 }
@@ -29,6 +30,7 @@ export declare class SignedTransaction {
     blockNumber: number | null;
     blockHash: H256 | null;
     transactionIndex: number | null;
+    result: boolean | null;
     private _signature;
     /**
      * @param unsigned A Transaction.
@@ -36,8 +38,9 @@ export declare class SignedTransaction {
      * @param blockNumber The block number of the block that contains the tx.
      * @param blockHash The hash of the block that contains the tx.
      * @param transactionIndex The index(location) of the tx within the block.
+     * @param result The result of the transaction.
      */
-    constructor(unsigned: Transaction, signature: string, blockNumber?: number, blockHash?: H256, transactionIndex?: number);
+    constructor(unsigned: Transaction, signature: string, blockNumber?: number, blockHash?: H256, transactionIndex?: number, result?: boolean);
     /**
      * Get the signature of a tx.
      */

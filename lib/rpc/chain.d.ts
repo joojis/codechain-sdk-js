@@ -51,12 +51,12 @@ export declare class ChainRpc {
      */
     getTransaction(hash: H256 | string): Promise<SignedTransaction | null>;
     /**
-     * Gets invoices of given tx.
+     * Gets the transaction result of given tx.
      * @param hash The tx hash of which to get the corresponding tx of.
      * @param options.timeout Indicating milliseconds to wait the tx to be confirmed.
-     * @returns List of invoice, or null when no such tx exists.
+     * @returns boolean, or null when transaction of given hash not exists.
      */
-    getInvoice(hash: H256 | string, options?: {
+    getTransactionResult(hash: H256 | string, options?: {
         timeout?: number;
     }): Promise<boolean | null>;
     /**
@@ -99,12 +99,12 @@ export declare class ChainRpc {
      */
     getTransactionByTracker(tracker: H256 | string): Promise<SignedTransaction | null>;
     /**
-     * Gets invoice of a transaction of given tracker.
+     * Gets results of a transaction of given tracker.
      * @param tracker The transaction hash of which to get the corresponding transaction of.
      * @param options.timeout Indicating milliseconds to wait the transaction to be confirmed.
-     * @returns boolean, or null when transaction of given hash not exists.
+     * @returns List of boolean, or null when transaction of given hash not exists.
      */
-    getInvoicesByTracker(tracker: H256 | string, options?: {
+    getTransactionResultsByTracker(tracker: H256 | string, options?: {
         timeout?: number;
     }): Promise<boolean[]>;
     /**
