@@ -13,6 +13,7 @@ export interface SignedTransactionJSON extends TransactionJSON {
     blockNumber: number | null;
     blockHash: string | null;
     transactionIndex: number | null;
+    result: boolean | null;
     sig: string;
     hash: string;
 }
@@ -36,6 +37,7 @@ export class SignedTransaction {
     public blockNumber: number | null;
     public blockHash: H256 | null;
     public transactionIndex: number | null;
+    public result: boolean | null;
     private _signature: string;
 
     /**
@@ -44,13 +46,15 @@ export class SignedTransaction {
      * @param blockNumber The block number of the block that contains the tx.
      * @param blockHash The hash of the block that contains the tx.
      * @param transactionIndex The index(location) of the tx within the block.
+     * @param result The result of the transaction.
      */
     constructor(
         unsigned: Transaction,
         signature: string,
         blockNumber?: number,
         blockHash?: H256,
-        transactionIndex?: number
+        transactionIndex?: number,
+        result?: boolean
     ) {
         this.unsigned = unsigned;
         this._signature = signature.startsWith("0x")
@@ -60,6 +64,7 @@ export class SignedTransaction {
         this.blockHash = blockHash || null;
         this.transactionIndex =
             transactionIndex === undefined ? null : transactionIndex;
+        this.result = result === undefined ? null : result;
     }
 
     /**
@@ -142,17 +147,19 @@ export class SignedTransaction {
             blockNumber,
             blockHash,
             transactionIndex,
+            result,
             unsigned,
             _signature
         } = this;
-        const result = {
+        const json = {
             ...unsigned.toJSON(),
             blockNumber,
             blockHash: blockHash === null ? null : blockHash.toJSON(),
             transactionIndex,
+            result,
             sig: `0x${_signature}`,
             hash: this.hash().toJSON()
         };
-        return result;
+        return json;
     }
 }

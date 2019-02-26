@@ -38,19 +38,40 @@ const ACCOUNT_PASSPHRASE = process.env.ACCOUNT_PASSPHRASE || "satoshi";
         passphrase: ACCOUNT_PASSPHRASE
     });
 
-    const mintTxInvoices = await sdk.rpc.chain.getInvoicesByTracker(
+    const mintTxResults = await sdk.rpc.chain.getTransactionResultsByTracker(
         mintTx.tracker(),
         {
             timeout: 300 * 1000
         }
     );
-    if (!mintTxInvoices[0]) {
+    if (!mintTxResults[0]) {
         throw Error(
             `AssetMintTransaction failed: ${JSON.stringify(
-                mintTxInvoices[0].error
+                mintTxResults[0].error
             )}`
         );
     }
+
+    await sdk.rpc.chain.sendTransaction(
+        sdk.core.createPayTransaction({
+            recipient: bobAddress,
+            quantity: 1
+        }),
+        {
+            account: ACCOUNT_ADDRESS,
+            passphrase: ACCOUNT_PASSPHRASE
+        }
+    );
+    await sdk.rpc.chain.sendTransaction(
+        sdk.core.createPayTransaction({
+            recipient: carolAddress,
+            quantity: 1
+        }),
+        {
+            account: ACCOUNT_ADDRESS,
+            passphrase: ACCOUNT_PASSPHRASE
+        }
+    );
 
     const assetSchemeChangeTx = sdk.core.createChangeAssetSchemeTransaction({
         assetType: mintTx.getMintedAsset().assetType,
@@ -71,16 +92,16 @@ const ACCOUNT_PASSPHRASE = process.env.ACCOUNT_PASSPHRASE || "satoshi";
         passphrase: ACCOUNT_PASSPHRASE
     });
 
-    const assetSchemeChangeTxInvoices = await sdk.rpc.chain.getInvoicesByTracker(
+    const assetSchemeChangeTxResults = await sdk.rpc.chain.getTransactionResultsByTracker(
         assetSchemeChangeTx.tracker(),
         {
             timeout: 300 * 1000
         }
     );
-    if (!assetSchemeChangeTxInvoices[0]) {
+    if (!assetSchemeChangeTxResults[0]) {
         throw Error(
             `AssetSchemeChange failed: ${JSON.stringify(
-                assetSchemeChangeTxInvoices[0].error
+                assetSchemeChangeTxResults[0].error
             )}`
         );
     }

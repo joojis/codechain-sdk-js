@@ -12,6 +12,16 @@ const ACCOUNT_PASSPHRASE = process.env.ACCOUNT_PASSPHRASE || "satoshi";
 
 (async () => {
     const account2 = await sdk.rpc.account.create();
+    await sdk.rpc.chain.sendTransaction(
+        sdk.core.createPayTransaction({
+            recipient: account2,
+            quantity: 1
+        }),
+        {
+            account: ACCOUNT_ADDRESS,
+            passphrase: ACCOUNT_PASSPHRASE
+        }
+    );
     const createShardTxHash = await sdk.rpc.chain.sendTransaction(
         sdk.core.createCreateShardTransaction({
             users: [account2]
@@ -37,10 +47,10 @@ const ACCOUNT_PASSPHRASE = process.env.ACCOUNT_PASSPHRASE || "satoshi";
             passphrase: ACCOUNT_PASSPHRASE
         }
     );
-    const setShardUsersInvoice = await sdk.rpc.chain.getInvoice(
+    const setShardUsersResult = await sdk.rpc.chain.getTransactionResult(
         setShardUsersHash
     );
-    if (!setShardUsersInvoice) {
+    if (!setShardUsersResult) {
         throw Error("SetShardUsers transaction failed");
     }
 
