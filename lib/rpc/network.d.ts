@@ -39,22 +39,22 @@ export declare class NetworkRpc {
      * Add the IP to whitelist
      * @param ip Node IP
      */
-    addToWhitelist(ip: string, tag?: string): Promise<null>;
+    addToWhitelist(ipCidr: string, tag?: string): Promise<null>;
     /**
      * Remove the IP from whitelist
      * @param ip Node IP
      */
-    removeFromWhitelist(ip: string): Promise<null>;
+    removeFromWhitelist(ipCidr: string): Promise<null>;
     /**
      * Add the IP to blacklist
      * @param ip Node IP
      */
-    addToBlacklist(ip: string, tag?: string): Promise<null>;
+    addToBlacklist(ipCidr: string, tag?: string): Promise<null>;
     /**
      * Remove the IP from blacklist
      * @param ip Node IP
      */
-    removeFromBlacklist(ip: string): Promise<null>;
+    removeFromBlacklist(ipCidr: string): Promise<null>;
     /**
      * Enable whitelist
      */
