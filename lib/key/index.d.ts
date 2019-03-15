@@ -1,5 +1,5 @@
-import { AssetTransferAddress, PlatformAddress } from "codechain-primitives";
-import { AssetTransferInput, Order, SignedTransaction, Transaction, U64, UnwrapCCC } from "../core/classes";
+import { AssetTransferAddress, PlatformAddress, PlatformAddressValue, U64Value } from "codechain-primitives";
+import { AssetTransferInput, Order, SignedTransaction, Transaction, UnwrapCCC } from "../core/classes";
 import { AssetTransaction } from "../core/Transaction";
 import { ComposeAsset } from "../core/transaction/ComposeAsset";
 import { DecomposeAsset } from "../core/transaction/DecomposeAsset";
@@ -89,7 +89,7 @@ export declare class Key {
      */
     approveTransaction(transaction: AssetTransaction, params: {
         keyStore?: KeyStore;
-        account: PlatformAddress | string;
+        account: PlatformAddressValue;
         passphrase?: string;
     }): Promise<string>;
     /**
@@ -104,9 +104,9 @@ export declare class Key {
      */
     signTransaction(tx: Transaction, params: {
         keyStore?: KeyStore;
-        account: PlatformAddress | string;
+        account: PlatformAddressValue;
         passphrase?: string;
-        fee: U64 | string | number;
+        fee: U64Value;
         seq: number;
     }): Promise<SignedTransaction>;
     /**

@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { AssetTransferAddress, H160, H256, U64 } from "codechain-primitives";
+import { AssetTransferAddressValue, H160, H256, U64 } from "codechain-primitives";
 import { AssetOutPoint } from "./transaction/AssetOutPoint";
 import { AssetTransferInput, Timelock } from "./transaction/AssetTransferInput";
 import { TransferAsset } from "./transaction/TransferAsset";
@@ -43,7 +43,7 @@ export declare class Asset {
     }): AssetTransferInput;
     createTransferTransaction(params: {
         recipients?: Array<{
-            address: AssetTransferAddress | string;
+            address: AssetTransferAddressValue;
             quantity: U64;
         }>;
         timelock?: null | Timelock;

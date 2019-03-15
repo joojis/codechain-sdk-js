@@ -1,6 +1,5 @@
 import { H256, PlatformAddress, U256 } from "codechain-primitives";
-import { SignedTransaction } from "./SignedTransaction";
-import { TransactionJSON } from "./Transaction";
+import { SignedTransaction, SignedTransactionJSON } from "./SignedTransaction";
 export interface BlockData {
     parentHash: H256;
     timestamp: number;
@@ -27,13 +26,13 @@ export interface BlockJSON {
     score: string;
     seal: number[][];
     hash: string;
-    transactions: TransactionJSON[];
+    transactions: SignedTransactionJSON[];
 }
 /**
  * Block is the unit of processes being handled by CodeChain. Contains information related to SignedTransaction's list and block creation.
  */
 export declare class Block {
-    static fromJSON(data: any): Block;
+    static fromJSON(data: BlockJSON): Block;
     parentHash: H256;
     timestamp: number;
     number: number;

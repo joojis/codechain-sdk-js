@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { AssetTransferAddress, H128, H160, H256, H512, PlatformAddress, U256, U64 } from "codechain-primitives";
+import { AssetTransferAddress, AssetTransferAddressValue, H128, H160, H160Value, H256, H256Value, H512, H512Value, PlatformAddress, PlatformAddressValue, U256, U64, U64Value } from "codechain-primitives";
 import { Asset } from "./Asset";
 import { AssetScheme } from "./AssetScheme";
 import { Block } from "./Block";
@@ -99,8 +99,8 @@ export declare class Core {
      * @throws Given number or string for quantity is invalid for converting it to U64
      */
     createPayTransaction(params: {
-        recipient: PlatformAddress | string;
-        quantity: U64 | number | string;
+        recipient: PlatformAddressValue;
+        quantity: U64Value;
     }): Pay;
     /**
      * Creates SetRegularKey type which sets the regular key of the tx signer.
@@ -108,17 +108,17 @@ export declare class Core {
      * @throws Given string for key is invalid for converting it to H512
      */
     createSetRegularKeyTransaction(params: {
-        key: H512 | string;
+        key: H512Value;
     }): SetRegularKey;
     /**
      * Creates CreateShard type which can create new shard
      */
     createCreateShardTransaction(params: {
-        users: Array<PlatformAddress | string>;
+        users: Array<PlatformAddressValue>;
     }): CreateShard;
     createSetShardOwnersTransaction(params: {
         shardId: number;
-        owners: Array<PlatformAddress | string>;
+        owners: Array<PlatformAddressValue>;
     }): SetShardOwners;
     /**
      * Create SetShardUser type which can change shard users
@@ -127,7 +127,7 @@ export declare class Core {
      */
     createSetShardUsersTransaction(params: {
         shardId: number;
-        users: Array<PlatformAddress | string>;
+        users: Array<PlatformAddressValue>;
     }): SetShardUsers;
     /**
      * Creates Wrap CCC type which wraps the value quantity of CCC(CodeChain Coin)
@@ -141,15 +141,15 @@ export declare class Core {
      */
     createWrapCCCTransaction(params: {
         shardId: number;
-        lockScriptHash: H160 | string;
+        lockScriptHash: H160Value;
         parameters: Buffer[];
-        quantity: U64 | number | string;
-        payer: PlatformAddress | string;
+        quantity: U64Value;
+        payer: PlatformAddressValue;
     } | {
         shardId: number;
-        recipient: AssetTransferAddress | string;
-        quantity: U64 | number | string;
-        payer: PlatformAddress | string;
+        recipient: AssetTransferAddressValue;
+        quantity: U64Value;
+        payer: PlatformAddressValue;
     }): WrapCCC;
     /**
      * Creates Store type which store content with certifier on chain.
@@ -161,11 +161,11 @@ export declare class Core {
      */
     createStoreTransaction(params: {
         content: string;
-        certifier: PlatformAddress | string;
+        certifier: PlatformAddressValue;
         signature: string;
     } | {
         content: string;
-        secret: H256 | string;
+        secret: H256Value;
     }): Store;
     /**
      * Creates Remove type which remove the text from the chain.
@@ -175,10 +175,10 @@ export declare class Core {
      * @throws Given string for hash or secret is invalid for converting it to H256
      */
     createRemoveTransaction(params: {
-        hash: H256 | string;
-        secret: H256 | string;
+        hash: H256Value;
+        secret: H256Value;
     } | {
-        hash: H256 | string;
+        hash: H256Value;
         signature: string;
     }): Remove;
     /**
@@ -199,57 +199,57 @@ export declare class Core {
      * @param params.approver Platform account or null. If account is present, the
      * tx that includes AssetTransferTransaction of this asset must be signed by
      * the approver account.
-     * @param params.administrator Platform account or null. The administrator
+     * @param params.registrar Platform account or null. The registrar
      * can transfer the asset without unlocking.
      * @throws Given string for approver is invalid for converting it to paltform account
-     * @throws Given string for administrator is invalid for converting it to paltform account
+     * @throws Given string for registrar is invalid for converting it to paltform account
      */
     createAssetScheme(params: {
         shardId: number;
         metadata: string;
-        supply: U64 | number | string;
-        approver?: PlatformAddress | string;
-        administrator?: PlatformAddress | string;
+        supply: U64Value;
+        approver?: PlatformAddressValue;
+        registrar?: PlatformAddressValue;
         allowedScriptHashes?: H160[];
         pool?: {
-            assetType: H160 | string;
+            assetType: H160Value;
             quantity: number;
         }[];
     }): AssetScheme;
     createOrder(params: {
-        assetTypeFrom: H160 | string;
-        assetTypeTo: H160 | string;
-        assetTypeFee?: H160 | string;
+        assetTypeFrom: H160Value;
+        assetTypeTo: H160Value;
+        assetTypeFee?: H160Value;
         shardIdFrom: number;
         shardIdTo: number;
         shardIdFee?: number;
-        assetQuantityFrom: U64 | number | string;
-        assetQuantityTo: U64 | number | string;
-        assetQuantityFee?: U64 | number | string;
+        assetQuantityFrom: U64Value;
+        assetQuantityTo: U64Value;
+        assetQuantityFee?: U64Value;
         originOutputs: AssetOutPoint[] | {
-            tracker: H256 | string;
+            tracker: H256Value;
             index: number;
-            assetType: H160 | string;
+            assetType: H160Value;
             shardId: number;
-            quantity: U64 | number | string;
-            lockScriptHash?: H256 | string;
+            quantity: U64Value;
+            lockScriptHash?: H256Value;
             parameters?: Buffer[];
         }[];
-        expiration: U64 | number | string;
+        expiration: U64Value;
     } & ({
-        lockScriptHashFrom: H160 | string;
+        lockScriptHashFrom: H160Value;
         parametersFrom: Buffer[];
     } | {
-        recipientFrom: AssetTransferAddress | string;
+        recipientFrom: AssetTransferAddressValue;
     }) & ({
-        lockScriptHashFee: H160 | string;
+        lockScriptHashFee: H160Value;
         parametersFee: Buffer[];
     } | {
-        recipientFee: AssetTransferAddress | string;
+        recipientFee: AssetTransferAddressValue;
     } | {})): Order;
     createOrderOnTransfer(params: {
         order: Order;
-        spentQuantity: U64 | string | number;
+        spentQuantity: U64Value;
         inputIndices: number[];
         outputIndices: number[];
     }): OrderOnTransfer;
@@ -258,31 +258,31 @@ export declare class Core {
             networkId?: NetworkId;
             shardId: number;
             metadata: string;
-            approver?: PlatformAddress | string;
-            administrator?: PlatformAddress | string;
+            approver?: PlatformAddressValue;
+            registrar?: PlatformAddressValue;
             allowedScriptHashes?: H160[];
-            supply?: U64 | number | string;
+            supply?: U64Value;
         };
-        recipient: AssetTransferAddress | string;
+        recipient: AssetTransferAddressValue;
         approvals?: string[];
     }): MintAsset;
     createChangeAssetSchemeTransaction(params: {
         shardId: number;
-        assetType: H160 | string;
+        assetType: H160Value;
         scheme: AssetScheme | {
             networkId?: NetworkId;
             metadata: string;
-            approver?: PlatformAddress | string;
-            administrator?: PlatformAddress | string;
+            approver?: PlatformAddressValue;
+            registrar?: PlatformAddressValue;
             allowedScriptHashes?: H160[];
         };
         approvals?: string[];
     }): ChangeAssetScheme;
     createIncreaseAssetSupplyTransaction(params: {
         shardId: number;
-        assetType: H160 | string;
-        recipient: AssetTransferAddress | string;
-        supply?: U64 | number | string;
+        assetType: H160Value;
+        recipient: AssetTransferAddressValue;
+        supply?: U64Value;
         approvals?: string[];
     }): IncreaseAssetSupply;
     createTransferAssetTransaction(params?: {
@@ -297,16 +297,17 @@ export declare class Core {
     }): TransferAsset;
     createUnwrapCCCTransaction(params: {
         burn: AssetTransferInput | Asset;
+        receiver: PlatformAddressValue;
         networkId?: NetworkId;
     }): UnwrapCCC;
     createAssetTransferInput(params: {
         assetOutPoint: AssetOutPoint | {
-            tracker: H256 | string;
+            tracker: H256Value;
             index: number;
-            assetType: H160 | string;
+            assetType: H160Value;
             shardId: number;
-            quantity: U64 | number | string;
-            lockScriptHash?: H256 | string;
+            quantity: U64Value;
+            lockScriptHash?: H256Value;
             parameters?: Buffer[];
         };
         timelock?: null | Timelock;
@@ -314,20 +315,20 @@ export declare class Core {
         unlockScript?: Buffer;
     }): AssetTransferInput;
     createAssetOutPoint(params: {
-        tracker: H256 | string;
+        tracker: H256Value;
         index: number;
-        assetType: H160 | string;
+        assetType: H160Value;
         shardId: number;
-        quantity: U64 | number | string;
+        quantity: U64Value;
     }): AssetOutPoint;
     createAssetTransferOutput(params: {
-        assetType: H160 | string;
+        assetType: H160Value;
         shardId: number;
-        quantity: U64 | number | string;
+        quantity: U64Value;
     } & ({
-        recipient: AssetTransferAddress | string;
+        recipient: AssetTransferAddressValue;
     } | {
-        lockScriptHash: H256 | string;
+        lockScriptHash: H256Value;
         parameters: Buffer[];
     })): AssetTransferOutput;
 }

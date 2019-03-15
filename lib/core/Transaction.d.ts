@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { H256, U64 } from "codechain-primitives";
+import { H256, H256Value, U64, U64Value } from "codechain-primitives";
 import { SignedTransaction } from "./SignedTransaction";
 import { ChangeAssetSchemeActionJSON } from "./transaction/ChangeAssetScheme";
 import { ComposeAssetActionJSON } from "./transaction/ComposeAsset";
@@ -47,15 +47,15 @@ export declare abstract class Transaction {
     seq(): number | null;
     fee(): U64 | null;
     setSeq(seq: number): void;
-    setFee(fee: U64 | string | number): void;
+    setFee(fee: U64Value): void;
     networkId(): NetworkId;
     toEncodeObject(): any[];
     rlpBytes(): Buffer;
     unsignedHash(): H256;
     sign(params: {
-        secret: H256 | string;
+        secret: H256Value;
         seq: number;
-        fee: U64 | string | number;
+        fee: U64Value;
     }): SignedTransaction;
     toJSON(): TransactionJSON;
     abstract type(): string;

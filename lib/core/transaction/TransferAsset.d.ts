@@ -1,6 +1,7 @@
+import { U64Value } from "codechain-primitives/lib";
 import { SignatureTag } from "../../utils";
 import { Asset } from "../Asset";
-import { H256, Order, OrderOnTransfer, U64 } from "../classes";
+import { H256, Order, OrderOnTransfer } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { AssetTransferOutputValue, NetworkId } from "../types";
 import { AssetTransferInput, AssetTransferInputJSON } from "./AssetTransferInput";
@@ -74,7 +75,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
      */
     addOrder(params: {
         order: Order;
-        spentQuantity: U64 | string | number;
+        spentQuantity: U64Value;
         inputIndices: number[];
         outputIndices: number[];
     }): this;

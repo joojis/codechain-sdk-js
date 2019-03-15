@@ -11,7 +11,7 @@ export interface AssetComposeTransactionJSON {
     shardId: number;
     metadata: string;
     approver: string | null;
-    administrator: string | null;
+    registrar: string | null;
     allowedScriptHashes: string[];
     output: AssetMintOutputJSON;
     inputs: AssetTransferInputJSON[];
@@ -27,7 +27,7 @@ export declare class ComposeAsset extends Transaction implements AssetTransactio
         shardId: number;
         metadata: string;
         approver: PlatformAddress | null;
-        administrator: PlatformAddress | null;
+        registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
         inputs: AssetTransferInput[];
         output: AssetMintOutput;

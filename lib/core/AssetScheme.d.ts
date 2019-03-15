@@ -1,11 +1,11 @@
-import { AssetTransferAddress, H160, PlatformAddress, U64 } from "codechain-primitives";
+import { AssetTransferAddressValue, H160, PlatformAddress, U64 } from "codechain-primitives";
 import { MintAsset } from "./transaction/MintAsset";
 import { NetworkId } from "./types";
 export interface AssetSchemeJSON {
     metadata: string;
     supply: string;
     approver: string | null;
-    administrator: string | null;
+    registrar: string | null;
     allowedScriptHashes: string[] | null;
     pool: {
         assetType: string;
@@ -22,7 +22,7 @@ export declare class AssetScheme {
     readonly metadata: string;
     readonly supply: U64;
     readonly approver: PlatformAddress | null;
-    readonly administrator: PlatformAddress | null;
+    readonly registrar: PlatformAddress | null;
     readonly allowedScriptHashes: H160[];
     readonly pool: {
         assetType: H160;
@@ -34,7 +34,7 @@ export declare class AssetScheme {
         metadata: string;
         supply: U64;
         approver: PlatformAddress | null;
-        administrator: PlatformAddress | null;
+        registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
         pool: {
             assetType: H160;
@@ -43,6 +43,6 @@ export declare class AssetScheme {
     });
     toJSON(): AssetSchemeJSON;
     createMintTransaction(params: {
-        recipient: AssetTransferAddress | string;
+        recipient: AssetTransferAddressValue;
     }): MintAsset;
 }

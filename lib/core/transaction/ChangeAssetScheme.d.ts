@@ -8,7 +8,7 @@ export interface AssetSchemeChangeTransactionJSON {
     assetType: string;
     metadata: string;
     approver: string | null;
-    administrator: string | null;
+    registrar: string | null;
     allowedScriptHashes: string[];
 }
 export interface ChangeAssetSchemeActionJSON extends AssetSchemeChangeTransactionJSON {
@@ -23,7 +23,7 @@ export declare class ChangeAssetScheme extends Transaction {
         shardId: number;
         metadata: string;
         approver: PlatformAddress | null;
-        administrator: PlatformAddress | null;
+        registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
         approvals: string[];
     });

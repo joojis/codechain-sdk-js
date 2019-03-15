@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { AssetTransferAddress, H160, H256, U64 } from "codechain-primitives";
+import { AssetTransferAddress, H160, H256, U64, U64Value } from "codechain-primitives";
 import { AssetOutPoint, AssetOutPointJSON } from "./AssetOutPoint";
 export interface OrderJSON {
     assetTypeFrom: string;
@@ -113,5 +113,5 @@ export declare class Order {
      * Return the consumed order
      * @param params.quantity the consumed quantity of the asset to give
      */
-    consume(quantity: U64 | number | string): Order;
+    consume(quantity: U64Value): Order;
 }

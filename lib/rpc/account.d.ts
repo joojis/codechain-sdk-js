@@ -1,4 +1,4 @@
-import { H256, PlatformAddress } from "codechain-primitives";
+import { H256, H256Value, PlatformAddressValue } from "codechain-primitives";
 import { Transaction } from "../core/Transaction";
 import { Rpc } from ".";
 export declare class AccountRpc {
@@ -27,14 +27,14 @@ export declare class AccountRpc {
      * @param passphrase A passphrase to be used by the account owner
      * @returns The account
      */
-    importRaw(secret: H256 | string, passphrase?: string): Promise<string>;
+    importRaw(secret: H256Value, passphrase?: string): Promise<string>;
     /**
      * Calculates the account's signature for a given message.
      * @param messageDigest A message to sign
      * @param address A platform address
      * @param passphrase The account's passphrase
      */
-    sign(messageDigest: H256 | string, address: PlatformAddress | string, passphrase?: string): Promise<string>;
+    sign(messageDigest: H256Value, address: PlatformAddressValue, passphrase?: string): Promise<string>;
     /**
      * Sends a transaction with the account's signature.
      * @param params.tx A tx to send
@@ -43,7 +43,7 @@ export declare class AccountRpc {
      */
     sendTransaction(params: {
         tx: Transaction;
-        account: PlatformAddress | string;
+        account: PlatformAddressValue;
         passphrase?: string;
     }): Promise<{
         hash: H256;
@@ -55,12 +55,12 @@ export declare class AccountRpc {
      * @param passphrase The account's passphrase
      * @param duration Time to keep the account unlocked. The default value is 300(seconds). Passing 0 unlocks the account indefinitely.
      */
-    unlock(address: PlatformAddress | string, passphrase?: string, duration?: number): Promise<null>;
+    unlock(address: PlatformAddressValue, passphrase?: string, duration?: number): Promise<null>;
     /**
      * Changes the passpharse of the account
      * @param address A platform address
      * @param oldPassphrase The account's current passphrase
      * @param newPassphrase The new passphrase for the account
      */
-    changePassword(address: PlatformAddress | string, oldPassphrase: string, newPassphrase: string): Promise<null>;
+    changePassword(address: PlatformAddressValue, oldPassphrase: string, newPassphrase: string): Promise<null>;
 }

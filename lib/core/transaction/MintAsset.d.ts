@@ -9,7 +9,7 @@ export interface AssetMintTransactionJSON {
     metadata: string;
     output: AssetMintOutputJSON;
     approver: string | null;
-    administrator: string | null;
+    registrar: string | null;
     allowedScriptHashes: string[];
 }
 export interface MintAssetActionJSON extends AssetMintTransactionJSON {
@@ -24,7 +24,7 @@ export declare class MintAsset extends Transaction implements AssetTransaction {
         metadata: string;
         output: AssetMintOutput;
         approver: PlatformAddress | null;
-        administrator: PlatformAddress | null;
+        registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
         approvals: string[];
     });

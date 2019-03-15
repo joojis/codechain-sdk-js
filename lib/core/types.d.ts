@@ -1,9 +1,9 @@
-import { AssetTransferAddress, H160, U64 } from "codechain-primitives";
+import { AssetTransferAddressValue, H160Value, U64Value } from "codechain-primitives";
 import { AssetTransferOutput } from "./transaction/AssetTransferOutput";
 export declare type NetworkId = string;
 export declare type AssetTransferOutputValue = AssetTransferOutput | {
-    quantity: U64 | number | string;
-    assetType: H160 | string;
+    quantity: U64Value;
+    assetType: H160Value;
     shardId: number;
-    recipient: AssetTransferAddress | string;
+    recipient: AssetTransferAddressValue;
 };

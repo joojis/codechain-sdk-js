@@ -1,3 +1,4 @@
+import { PlatformAddress } from "codechain-primitives/lib";
 import { SignatureTag } from "../../utils";
 import { AssetTransferInput, H256 } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
@@ -6,16 +7,19 @@ import { AssetTransferInputJSON } from "./AssetTransferInput";
 export interface AssetUnwrapCCCTransactionJSON {
     networkId: string;
     burn: AssetTransferInputJSON;
+    receiver: string;
 }
 export interface UnwrapCCCActionJSON {
     networkId: string;
     burn: AssetTransferInputJSON;
+    receiver: string;
 }
 export declare class UnwrapCCC extends Transaction implements AssetTransaction {
     private readonly _transaction;
     constructor(input: {
         burn: AssetTransferInput;
         networkId: NetworkId;
+        receiver: PlatformAddress;
     });
     /**
      * Get a hash of the transaction that doesn't contain the scripts. The hash
