@@ -1,4 +1,15 @@
-import { H160, H256, H512, PlatformAddress, U64 } from "codechain-primitives";
+import {
+    H160,
+    H160Value,
+    H256,
+    H256Value,
+    H512,
+    H512Value,
+    PlatformAddress,
+    PlatformAddressValue,
+    U64,
+    U64Value
+} from "codechain-primitives";
 
 import { Rpc } from ".";
 import { Asset } from "../core/Asset";
@@ -75,10 +86,10 @@ export class ChainRpc {
     public async sendTransaction(
         tx: Transaction,
         options?: {
-            account?: PlatformAddress | string;
+            account?: PlatformAddressValue;
             passphrase?: string;
             seq?: number | null;
-            fee?: U64 | string | number;
+            fee?: U64Value;
         }
     ): Promise<H256> {
         if (!(tx instanceof Transaction)) {
@@ -118,9 +129,7 @@ export class ChainRpc {
      * @param hash SignedTransaction's hash
      * @returns SignedTransaction, or null when SignedTransaction was not found.
      */
-    public getTransaction(
-        hash: H256 | string
-    ): Promise<SignedTransaction | null> {
+    public getTransaction(hash: H256Value): Promise<SignedTransaction | null> {
         if (!H256.check(hash)) {
             throw Error(
                 `Expected the first argument of getTransaction to be an H256 value but found ${hash}`
@@ -157,7 +166,7 @@ export class ChainRpc {
      * @returns boolean, or null when transaction of given hash not exists.
      */
     public async getTransactionResult(
-        hash: H256 | string,
+        hash: H256Value,
         options: { timeout?: number } = {}
     ): Promise<boolean | null> {
         if (!H256.check(hash)) {
@@ -208,7 +217,7 @@ export class ChainRpc {
      * @returns The regular key of account at specified block.
      */
     public getRegularKey(
-        address: PlatformAddress | string,
+        address: PlatformAddressValue,
         blockNumber?: number
     ): Promise<H512 | null> {
         if (!PlatformAddress.check(address)) {
@@ -249,7 +258,7 @@ export class ChainRpc {
      * @return The platform address that can use the regular key at the specified block.
      */
     public getRegularKeyOwner(
-        regularKey: H512 | string,
+        regularKey: H512Value,
         blockNumber?: number
     ): Promise<PlatformAddress | null> {
         if (!H512.check(regularKey)) {
@@ -294,7 +303,7 @@ export class ChainRpc {
      * @returns A shard id.
      */
     public getShardIdByHash(
-        hash: H256 | string,
+        hash: H256Value,
         blockNumber?: number
     ): Promise<number | null> {
         if (!H256.check(hash)) {
@@ -400,7 +409,7 @@ export class ChainRpc {
      * @returns A transaction, or null when transaction of given hash not exists.
      */
     public getTransactionByTracker(
-        tracker: H256 | string
+        tracker: H256Value
     ): Promise<SignedTransaction | null> {
         if (!H256.check(tracker)) {
             throw Error(
@@ -438,7 +447,7 @@ export class ChainRpc {
      * @returns List of boolean, or null when transaction of given hash not exists.
      */
     public async getTransactionResultsByTracker(
-        tracker: H256 | string,
+        tracker: H256Value,
         options: { timeout?: number } = {}
     ): Promise<boolean[]> {
         if (!H256.check(tracker)) {
@@ -492,7 +501,7 @@ export class ChainRpc {
      * @returns Balance of account at the specified block, or null if no such block exists.
      */
     public getBalance(
-        address: PlatformAddress | string,
+        address: PlatformAddressValue,
         blockNumber?: number
     ): Promise<U64> {
         if (!PlatformAddress.check(address)) {
@@ -536,7 +545,7 @@ export class ChainRpc {
      * @returns Null if the transaction is not involved in the chain or succeeded. If the transaction failed, this should return the reason for the transaction failing.
      */
     public async getErrorHint(
-        transactionHash: H256 | string
+        transactionHash: H256Value
     ): Promise<string | null> {
         if (!H256.check(transactionHash)) {
             throw Error(
@@ -569,7 +578,7 @@ export class ChainRpc {
      * @returns Seq of account at the specified block, or null if no such block exists.
      */
     public getSeq(
-        address: PlatformAddress | string,
+        address: PlatformAddressValue,
         blockNumber?: number
     ): Promise<number> {
         if (!PlatformAddress.check(address)) {
@@ -655,7 +664,7 @@ export class ChainRpc {
      * @returns Block, if block exists. Else, returns null.
      */
     public async getBlock(
-        hashOrNumber: H256 | string | number
+        hashOrNumber: H256Value | number
     ): Promise<Block | null> {
         let result;
         if (hashOrNumber instanceof H256 || typeof hashOrNumber === "string") {
@@ -688,7 +697,7 @@ export class ChainRpc {
      * @returns AssetScheme, if asset scheme exists. Else, returns null.
      */
     public getAssetSchemeByTracker(
-        tracker: H256 | string,
+        tracker: H256Value,
         shardId: number,
         blockNumber?: number | null
     ): Promise<AssetScheme | null> {
@@ -741,7 +750,7 @@ export class ChainRpc {
      * @returns AssetScheme, if asset scheme exists. Else, returns null.
      */
     public getAssetSchemeByType(
-        assetType: H160 | string,
+        assetType: H160Value,
         shardId: number,
         blockNumber?: number | null
     ): Promise<AssetScheme | null> {
@@ -752,12 +761,12 @@ export class ChainRpc {
         }
         if (!isShardIdValue(shardId)) {
             throw Error(
-                `Expected the second argument of getAssetSchemeByTracker to be a shard ID value but found ${shardId}`
+                `Expected the second argument of getAssetSchemeByType to be a shard ID value but found ${shardId}`
             );
         }
         if (blockNumber !== undefined && !isNonNegativeInterger(blockNumber)) {
             throw Error(
-                `Expected the second argument of getAssetSchemeByType to be non-negative integer but found ${blockNumber}`
+                `Expected the third argument of getAssetSchemeByType to be non-negative integer but found ${blockNumber}`
             );
         }
         return new Promise((resolve, reject) => {
@@ -795,7 +804,7 @@ export class ChainRpc {
      * @returns Asset, if asset exists, Else, returns null.
      */
     public getAsset(
-        tracker: H256 | string,
+        tracker: H256Value,
         index: number,
         shardId: number,
         blockNumber?: number
@@ -812,12 +821,12 @@ export class ChainRpc {
         }
         if (!isShardIdValue(shardId)) {
             throw Error(
-                `Expected the second argument of getAssetSchemeByTracker to be a shard ID value but found ${shardId}`
+                `Expected the third argument of getAsset to be a shard ID value but found ${shardId}`
             );
         }
         if (blockNumber !== undefined && !isNonNegativeInterger(blockNumber)) {
             throw Error(
-                `Expected the third argument of getAsset to be non-negative integer but found ${blockNumber}`
+                `Expected the forth argument of getAsset to be non-negative integer but found ${blockNumber}`
             );
         }
         return new Promise((resolve, reject) => {
@@ -860,7 +869,7 @@ export class ChainRpc {
      * @returns Text, if text exists. Else, returns null.
      */
     public getText(
-        txHash: H256 | string,
+        txHash: H256Value,
         blockNumber?: number | null
     ): Promise<Text | null> {
         if (!H256.check(txHash)) {
@@ -903,7 +912,7 @@ export class ChainRpc {
      * @returns True, if the asset is spent. False, if the asset is not spent. Null, if no such asset exists.
      */
     public isAssetSpent(
-        txhash: H256 | string,
+        txhash: H256Value,
         index: number,
         shardId: number,
         blockNumber?: number
@@ -938,7 +947,7 @@ export class ChainRpc {
                     } else {
                         reject(
                             Error(
-                                `Expected chain_isAssetSpent to return either null or boolean but it returned ${result}`
+                                `Expected chain_isAssetSpent to return either null or a boolean but it returned ${result}`
                             )
                         );
                     }
@@ -948,27 +957,62 @@ export class ChainRpc {
     }
 
     /**
-     * Gets pending transactions.
+     * Gets pending transactions that have the insertion timestamp within the given range.
+     * @param from The lower bound of the insertion timestamp.
+     * @param to The upper bound of the insertion timestamp.
      * @returns List of SignedTransaction, with each tx has null for blockNumber/blockHash/transactionIndex.
      */
-    public getPendingTransactions(): Promise<SignedTransaction[]> {
+    public getPendingTransactions(
+        from?: number | null,
+        to?: number | null
+    ): Promise<{
+        transactions: SignedTransaction[];
+        lastTimestamp: number | null;
+    }> {
+        if (from != null && !isNonNegativeInterger(from)) {
+            throw Error(
+                `Expected the first argument of getPendingTransactions to be a non-negative integer but found ${from}`
+            );
+        }
+        if (to != null && !isNonNegativeInterger(to)) {
+            throw Error(
+                `Expected the second argument of getPendingTransactions to be a non-negative integer but found ${to}`
+            );
+        }
         return new Promise((resolve, reject) => {
             this.rpc
-                .sendRpcRequest("chain_getPendingTransactions", [])
+                .sendRpcRequest("chain_getPendingTransactions", [from, to])
                 .then(result => {
-                    if (!Array.isArray(result)) {
-                        return reject(
-                            Error(
-                                `Expected chain_getPendingTransactions to return an array but it returned ${result}`
-                            )
-                        );
-                    }
                     try {
-                        resolve(result.map(fromJSONToSignedTransaction));
+                        const resultTransactions = result.transactions;
+                        const resultLastTimestamp = result.lastTimestamp;
+                        if (!Array.isArray(resultTransactions)) {
+                            return reject(
+                                Error(
+                                    `Expected chain_getPendingTransactions to return an object whose property "transactions" is of array type but it is ${resultTransactions}`
+                                )
+                            );
+                        }
+                        if (
+                            resultLastTimestamp !== null &&
+                            typeof resultLastTimestamp !== "number"
+                        ) {
+                            return reject(
+                                Error(
+                                    `Expected chain_getPendingTransactions to return an object containing a number but it returned ${resultLastTimestamp}`
+                                )
+                            );
+                        }
+                        resolve({
+                            transactions: resultTransactions.map(
+                                fromJSONToSignedTransaction
+                            ),
+                            lastTimestamp: resultLastTimestamp
+                        });
                     } catch (e) {
                         reject(
                             Error(
-                                `Expected chain_getPendingTransactions to return an array of JSON of SignedTransaction, but an error occurred: ${e.toString()}`
+                                `Expected chain_getPendingTransactions to return an object who has transactions and lastTimestamp properties, but an error occurred: ${e.toString()}`
                             )
                         );
                     }
@@ -992,6 +1036,173 @@ export class ChainRpc {
                         reject(
                             Error(
                                 `Expected chain_getNetworkId to return a string but it returned ${result}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Gets the number of shards, at the state of the given blockNumber
+     * @param blockNumber A block number.
+     * @returns A number of shards
+     */
+    public getNumberOfShards(blockNumber?: number): Promise<number> {
+        if (blockNumber !== undefined && !isNonNegativeInterger(blockNumber)) {
+            throw Error(
+                `Expected the first argument of getNumberOfShards to be a number but found ${blockNumber}`
+            );
+        }
+
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_getNumberOfShards", [blockNumber])
+                .then(result => {
+                    if (result === null || typeof result === "number") {
+                        resolve(result);
+                    } else {
+                        reject(
+                            Error(
+                                `Expected chain_getNumberOfShards to return a number, but it returned ${result}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Gets the platform account in the genesis block
+     * @returns The platform addresses in the genesis block.
+     */
+    public getGenesisAccounts(): Promise<PlatformAddress[]> {
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_getGenesisAccounts", [])
+                .then(result => {
+                    try {
+                        resolve(
+                            (result as string[]).map(str =>
+                                PlatformAddress.ensure(str)
+                            )
+                        );
+                    } catch (e) {
+                        reject(
+                            Error(
+                                `Expected chain_getGenesisAccounts to return an array of PlatformAddress, but an error occurred: ${e.toString()}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Gets the root of the shard, at the state of the given blockNumber.
+     * @param shardId A shard Id.
+     * @param blockNumber A block number.
+     * @returns The hash of root of the shard.
+     */
+    public getShardRoot(
+        shardId: number,
+        blockNumber?: number
+    ): Promise<H256 | null> {
+        if (!isShardIdValue(shardId)) {
+            throw Error(
+                `Expected the first argument of getShardRoot to be a shard ID value but found ${shardId}`
+            );
+        }
+        if (blockNumber !== undefined && !isNonNegativeInterger(blockNumber)) {
+            throw Error(
+                `Expected the second argument of getShardRoot to be a non-negative integer but found ${blockNumber}`
+            );
+        }
+
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_getShardRoot", [shardId, blockNumber])
+                .then(result => {
+                    try {
+                        resolve(result === null ? null : new H256(result));
+                    } catch (e) {
+                        reject(
+                            Error(
+                                `Expected chain_getShardRoot to return either null or a value of H256, but an error occurred: ${e.toString()}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Gets the mining reward of the given block number.
+     * @param blockNumber A block nubmer.
+     * @returns The amount of mining reward, or null if the given block number is not mined yet.
+     */
+    public getMiningReward(blockNumber: number): Promise<U64 | null> {
+        if (!isNonNegativeInterger(blockNumber)) {
+            throw Error(
+                `Expected the argument of getMiningReward to be a non-negative integer but found ${blockNumber}`
+            );
+        }
+
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_getMiningReward", [blockNumber])
+                .then(result => {
+                    try {
+                        resolve(result === null ? null : new U64(result));
+                    } catch (e) {
+                        reject(
+                            Error(
+                                `Expected chain_getMiningReward to return either null or a value of U64, but an error occurred: ${e.toString()}`
+                            )
+                        );
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Executes the transactions.
+     * @param tx A transaction to execute.
+     * @param sender A platform address of sender.
+     * @returns True, if the transaction is executed successfully. False, if the transaction is not executed.
+     */
+    public executeTransaction(
+        tx: Transaction,
+        sender: PlatformAddressValue
+    ): Promise<boolean> {
+        if (!(tx instanceof Transaction)) {
+            throw Error(
+                `Expected the first argument of executeTransaction to be a Transaction but found ${tx}`
+            );
+        }
+        if (!PlatformAddress.check(sender)) {
+            throw Error(
+                `Expected the second argument of executeTransaction to be a PlatformAddress value but found ${PlatformAddress}`
+            );
+        }
+        return new Promise((resolve, reject) => {
+            this.rpc
+                .sendRpcRequest("chain_executeTransaction", [
+                    tx.toJSON(),
+                    PlatformAddress.ensure(sender).toString()
+                ])
+                .then(result => {
+                    if (typeof result === "boolean") {
+                        resolve(result);
+                    } else {
+                        reject(
+                            Error(
+                                `Expected chain_executeTransaction to return a boolean but it returned ${result}`
                             )
                         );
                     }

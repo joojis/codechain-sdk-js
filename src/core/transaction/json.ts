@@ -7,6 +7,7 @@ import {
     Transaction,
     U64
 } from "../classes";
+import { SignedTransactionJSON } from "../SignedTransaction";
 import { AssetMintOutput } from "./AssetMintOutput";
 import { AssetTransferInput } from "./AssetTransferInput";
 import { AssetTransferOutput } from "./AssetTransferOutput";
@@ -38,10 +39,10 @@ export function fromJSONToTransaction(result: any): Transaction {
                 action.approver == null
                     ? null
                     : PlatformAddress.ensure(action.approver);
-            const administrator =
-                action.administrator == null
+            const registrar =
+                action.registrar == null
                     ? null
-                    : PlatformAddress.ensure(action.administrator);
+                    : PlatformAddress.ensure(action.registrar);
             const allowedScriptHashes =
                 action.allowedScriptHashes == null
                     ? null
@@ -55,7 +56,7 @@ export function fromJSONToTransaction(result: any): Transaction {
                 metadata,
                 output,
                 approver,
-                administrator,
+                registrar,
                 allowedScriptHashes,
                 approvals
             });
@@ -68,10 +69,10 @@ export function fromJSONToTransaction(result: any): Transaction {
                 action.approver == null
                     ? null
                     : PlatformAddress.ensure(action.approver);
-            const administrator =
-                action.administrator == null
+            const registrar =
+                action.registrar == null
                     ? null
-                    : PlatformAddress.ensure(action.administrator);
+                    : PlatformAddress.ensure(action.registrar);
             const allowedScriptHashes = action.allowedScriptHashes.map(
                 (hash: string) => H160.ensure(hash)
             );
@@ -81,7 +82,7 @@ export function fromJSONToTransaction(result: any): Transaction {
                 assetType,
                 metadata,
                 approver,
-                administrator,
+                registrar,
                 allowedScriptHashes,
                 approvals
             });
@@ -138,10 +139,10 @@ export function fromJSONToTransaction(result: any): Transaction {
                 action.approver == null
                     ? null
                     : PlatformAddress.ensure(action.approver);
-            const administrator =
-                action.administrator == null
+            const registrar =
+                action.registrar == null
                     ? null
-                    : PlatformAddress.ensure(action.administrator);
+                    : PlatformAddress.ensure(action.registrar);
             const allowedScriptHashes = action.allowedScriptHashes.map(
                 (hash: string) => H160.ensure(hash)
             );
@@ -152,7 +153,7 @@ export function fromJSONToTransaction(result: any): Transaction {
                 shardId,
                 metadata,
                 approver,
-                administrator,
+                registrar,
                 allowedScriptHashes,
                 inputs,
                 output,
@@ -162,9 +163,11 @@ export function fromJSONToTransaction(result: any): Transaction {
         }
         case "unwrapCCC": {
             const burn = AssetTransferInput.fromJSON(action.burn);
+            const receiver = PlatformAddress.ensure(action.receiver);
             tx = new UnwrapCCC({
                 burn,
-                networkId
+                networkId,
+                receiver
             });
             break;
         }
@@ -277,18 +280,22 @@ export function fromJSONToTransaction(result: any): Transaction {
     return tx;
 }
 
-// FIXME: any
 /**
  * Create a SignedTransaction from a SignedTransaction JSON object.
  * @param data A SignedTransaction JSON object.
  * @returns A SignedTransaction.
  */
-export function fromJSONToSignedTransaction(data: any) {
+export function fromJSONToSignedTransaction(data: SignedTransactionJSON) {
     const { sig, blockNumber, blockHash, transactionIndex, result } = data;
     if (typeof sig !== "string") {
         throw Error("Unexpected type of sig");
     }
-    if (blockNumber) {
+    if (
+        blockNumber != null &&
+        blockHash != null &&
+        transactionIndex != null &&
+        result != null
+    ) {
         return new SignedTransaction(
             fromJSONToTransaction(data),
             sig,
