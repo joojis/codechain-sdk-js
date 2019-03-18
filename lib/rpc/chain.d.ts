@@ -231,4 +231,33 @@ export declare class ChainRpc {
      * @returns True, if the transaction is executed successfully. False, if the transaction is not executed.
      */
     executeTransaction(tx: Transaction, sender: PlatformAddressValue): Promise<boolean>;
+    /**
+     * Gets the id of the latest block.
+     * @returns A number and the hash of the latest block.
+     */
+    getBestBlockId(): Promise<{
+        hash: H256;
+        number: number;
+    }>;
+    /**
+     * Gets the number of transactions within a block that corresponds with the given hash.
+     * @param hash The block hash.
+     * @returns A number of transactions within a block.
+     */
+    getBlockTransactionCountByHash(hash: H256Value): Promise<number | null>;
+    /**
+     * Gets the count of the pending transactions within the given range from the transaction queues.
+     * @param from The lower bound of collected pending transactions. If null, there is no lower bound.
+     * @param to The upper bound of collected pending transactions. If null, there is no upper bound.
+     * @returns The count of the pending transactions.
+     */
+    getPendingTransactionsCount(from?: number | null, to?: number | null): Promise<number>;
+    /**
+     * Execute the inputs of the AssetTransfer transaction in the CodeChain VM.
+     * @param transaction The transaction that its inputs will be executed.
+     * @param parameters Parameters of the outputs as an array.
+     * @param indices Indices of inputs to run in VM.
+     * @returns The results of VM execution.
+     */
+    executeVM(transaction: SignedTransaction, parameters: string[][], indices: number[]): Promise<string[]>;
 }
