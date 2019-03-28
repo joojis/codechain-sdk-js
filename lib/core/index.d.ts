@@ -206,7 +206,7 @@ export declare class Core {
      */
     createAssetScheme(params: {
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         supply: U64Value;
         approver?: PlatformAddressValue;
         registrar?: PlatformAddressValue;
@@ -257,7 +257,7 @@ export declare class Core {
         scheme: AssetScheme | {
             networkId?: NetworkId;
             shardId: number;
-            metadata: string;
+            metadata: string | object;
             approver?: PlatformAddressValue;
             registrar?: PlatformAddressValue;
             allowedScriptHashes?: H160[];
@@ -271,7 +271,7 @@ export declare class Core {
         assetType: H160Value;
         scheme: AssetScheme | {
             networkId?: NetworkId;
-            metadata: string;
+            metadata: string | object;
             approver?: PlatformAddressValue;
             registrar?: PlatformAddressValue;
             allowedScriptHashes?: H160[];
@@ -291,7 +291,7 @@ export declare class Core {
         outputs?: AssetTransferOutput[];
         orders?: OrderOnTransfer[];
         networkId?: NetworkId;
-        metadata?: string;
+        metadata?: string | object;
         approvals?: string[];
         expiration?: number;
     }): TransferAsset;

@@ -30,7 +30,7 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
         outputs: AssetTransferOutput[];
         orders: OrderOnTransfer[];
         networkId: NetworkId;
-        metadata: string;
+        metadata: string | object;
         approvals: string[];
         expiration: number | null;
     });
@@ -39,6 +39,11 @@ export declare class TransferAsset extends Transaction implements AssetTransacti
      * @returns A transaction tracker.
      */
     tracker(): H256;
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    addApproval(approval: string): void;
     /**
      * Add an AssetTransferInput to burn.
      * @param burns An array of either an AssetTransferInput or an Asset.

@@ -33,6 +33,11 @@ export declare class UnwrapCCC extends Transaction implements AssetTransaction {
     }): H256;
     burn(index: number): AssetTransferInput | null;
     tracker(): H256;
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    addApproval(_approval: string): void;
     type(): string;
     protected actionToEncodeObject(): any[];
     protected actionToJSON(): UnwrapCCCActionJSON;

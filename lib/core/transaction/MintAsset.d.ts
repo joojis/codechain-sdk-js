@@ -21,7 +21,7 @@ export declare class MintAsset extends Transaction implements AssetTransaction {
     constructor(input: {
         networkId: NetworkId;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         output: AssetMintOutput;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
@@ -33,6 +33,11 @@ export declare class MintAsset extends Transaction implements AssetTransaction {
      * @returns A transaction tracker.
      */
     tracker(): H256;
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    addApproval(approval: string): void;
     output(): AssetMintOutput;
     /**
      * Get the output of this transaction.

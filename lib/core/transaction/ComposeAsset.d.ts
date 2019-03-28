@@ -25,7 +25,7 @@ export declare class ComposeAsset extends Transaction implements AssetTransactio
     constructor(input: {
         networkId: NetworkId;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
@@ -38,6 +38,11 @@ export declare class ComposeAsset extends Transaction implements AssetTransactio
      * @returns A transaction hash.
      */
     tracker(): H256;
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    addApproval(approval: string): void;
     /**
      * Get a hash of the transaction that doesn't contain the scripts. The hash
      * is used as a message to create a signature for a transaction.

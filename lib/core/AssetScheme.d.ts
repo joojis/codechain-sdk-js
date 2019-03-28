@@ -31,7 +31,7 @@ export declare class AssetScheme {
     constructor(data: {
         networkId?: NetworkId;
         shardId?: number;
-        metadata: string;
+        metadata: string | object;
         supply: U64;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;

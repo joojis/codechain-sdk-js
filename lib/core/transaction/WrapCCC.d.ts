@@ -42,6 +42,11 @@ export declare class WrapCCC extends Transaction implements AssetTransaction {
      */
     getAsset(): Asset;
     tracker(): import("codechain-primitives/lib").H256;
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    addApproval(_approval: string): void;
     type(): string;
     protected actionToEncodeObject(): any[];
     protected actionToJSON(): WrapCCCActionJSON;

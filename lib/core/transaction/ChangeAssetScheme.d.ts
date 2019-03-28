@@ -21,7 +21,7 @@ export declare class ChangeAssetScheme extends Transaction {
         networkId: NetworkId;
         assetType: H160;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
@@ -32,6 +32,11 @@ export declare class ChangeAssetScheme extends Transaction {
      * @returns A transaction hash.
      */
     tracker(): H256;
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    addApproval(approval: string): void;
     type(): string;
     protected actionToEncodeObject(): (any)[];
     protected actionToJSON(): ChangeAssetSchemeActionJSON;

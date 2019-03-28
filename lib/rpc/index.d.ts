@@ -42,5 +42,7 @@ export declare class Rpc {
             transactionFee?: number;
         };
     });
-    sendRpcRequest: (name: string, params: any[], id?: string | undefined) => Promise<any>;
+    sendRpcRequest: (name: string, params: any[], options?: {
+        id?: string | undefined;
+    } | undefined) => Promise<any>;
 }

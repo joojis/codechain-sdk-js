@@ -20,6 +20,7 @@ import { WrapCCCActionJSON } from "./transaction/WrapCCC";
 import { NetworkId } from "./types";
 export interface AssetTransaction {
     tracker(): H256;
+    addApproval(approval: string): void;
 }
 declare type ActionJSON = PayActionJSON | SetRegularKeyActionJSON | SetShardOwnersActionJSON | SetShardUsersActionJSON | IncreaseAssetSupplyActionJSON | CreateShardActionJSON | MintAssetActionJSON | TransferAssetActionJSON | ComposeAssetActionJSON | DecomposeAssetActionJSON | ChangeAssetSchemeActionJSON | StoreActionJSON | RemoveActionJSON | CustomActionJSON | WrapCCCActionJSON | UnwrapCCCActionJSON;
 export interface TransactionJSON {
