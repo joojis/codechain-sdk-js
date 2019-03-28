@@ -44,7 +44,7 @@ export class ComposeAsset extends Transaction implements AssetTransaction {
     public constructor(input: {
         networkId: NetworkId;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
@@ -65,6 +65,14 @@ export class ComposeAsset extends Transaction implements AssetTransaction {
      */
     public tracker(): H256 {
         return new H256(blake256(this._transaction.rlpBytes()));
+    }
+
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    public addApproval(approval: string) {
+        this.approvals.push(approval);
     }
 
     /**
@@ -328,7 +336,7 @@ class AssetComposeTransaction {
     constructor(params: {
         networkId: NetworkId;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
         allowedScriptHashes: H160[];
@@ -347,7 +355,8 @@ class AssetComposeTransaction {
         } = params;
         this.networkId = networkId;
         this.shardId = shardId;
-        this.metadata = metadata;
+        this.metadata =
+            typeof metadata === "string" ? metadata : JSON.stringify(metadata);
         this.approver =
             approver == null ? null : PlatformAddress.ensure(approver);
         this.registrar =

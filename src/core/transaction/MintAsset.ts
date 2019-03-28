@@ -27,7 +27,7 @@ export class MintAsset extends Transaction implements AssetTransaction {
     public constructor(input: {
         networkId: NetworkId;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         output: AssetMintOutput;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
@@ -46,6 +46,14 @@ export class MintAsset extends Transaction implements AssetTransaction {
      */
     public tracker(): H256 {
         return new H256(blake256(this._transaction.rlpBytes()));
+    }
+
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    public addApproval(approval: string) {
+        this.approvals.push(approval);
     }
 
     public output(): AssetMintOutput {
@@ -203,7 +211,7 @@ class AssetMintTransaction {
     constructor(data: {
         networkId: NetworkId;
         shardId: number;
-        metadata: string;
+        metadata: string | object;
         output: AssetMintOutput;
         approver: PlatformAddress | null;
         registrar: PlatformAddress | null;
@@ -220,7 +228,8 @@ class AssetMintTransaction {
         } = data;
         this.networkId = networkId;
         this.shardId = shardId;
-        this.metadata = metadata;
+        this.metadata =
+            typeof metadata === "string" ? metadata : JSON.stringify(metadata);
         this.output = output;
         this.approver = approver;
         this.registrar = registrar;

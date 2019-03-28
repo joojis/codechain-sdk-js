@@ -1,6 +1,7 @@
 import { H160, H256 } from "codechain-primitives";
 import { blake256 } from "../../utils";
-import { Transaction } from "../Transaction";
+import { Asset } from "../Asset";
+import { AssetTransaction, Transaction } from "../Transaction";
 import { NetworkId } from "../types";
 import { AssetMintOutput, AssetMintOutputJSON } from "./AssetMintOutput";
 
@@ -18,7 +19,8 @@ export interface IncreaseAssetSupplyActionJSON
     approvals: string[];
 }
 
-export class IncreaseAssetSupply extends Transaction {
+export class IncreaseAssetSupply extends Transaction
+    implements AssetTransaction {
     private readonly transaction: IncreaseAssetSupplyTransaction;
     private readonly approvals: string[];
 
@@ -37,6 +39,36 @@ export class IncreaseAssetSupply extends Transaction {
 
     public tracker(): H256 {
         return new H256(blake256(this.transaction.rlpBytes()));
+    }
+
+    /**
+     * Add an approval to transaction.
+     * @param approval An approval
+     */
+    public addApproval(approval: string) {
+        this.approvals.push(approval);
+    }
+
+    public output(): AssetMintOutput {
+        return this.transaction.output;
+    }
+
+    /**
+     * Get the output of this transaction.
+     * @returns An Asset.
+     */
+    public getMintedAsset(): Asset {
+        const { assetType, shardId, output } = this.transaction;
+        const { lockScriptHash, parameters, supply } = output;
+        return new Asset({
+            assetType,
+            shardId,
+            lockScriptHash,
+            parameters,
+            quantity: supply,
+            tracker: this.tracker(),
+            transactionOutputIndex: 0
+        });
     }
 
     public type(): string {
@@ -59,10 +91,10 @@ export class IncreaseAssetSupply extends Transaction {
 }
 
 class IncreaseAssetSupplyTransaction {
+    public readonly shardId: number;
+    public readonly assetType: H160;
+    public readonly output: AssetMintOutput;
     private readonly networkId: NetworkId;
-    private readonly shardId: number;
-    private readonly assetType: H160;
-    private readonly output: AssetMintOutput;
 
     constructor(params: {
         networkId: NetworkId;
