@@ -63,9 +63,9 @@ async function setRegularKey() {
         })
     );
 
-    await sdk.rpc.chain.getTransactionResult(hash, {
-        timeout: 5 * 60 * 1000
-    });
+    while (!(await sdk.rpc.chain.containTransaction(hash))) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
 }
 
 async function sendCCCToOther(
@@ -87,9 +87,7 @@ async function sendCCCToOther(
         })
     );
 
-    const result = await sdk.rpc.chain.getTransactionResult(hash, {
-        timeout: 5 * 60 * 1000
-    });
+    const result = await sdk.rpc.chain.containTransaction(hash);
     expect(result).toBeTruthy();
     expect(result!).toBe(true);
 }
@@ -167,14 +165,10 @@ async function transferAssetUsingRegular(
         })
     );
 
-    const transferTxResults = await sdk.rpc.chain.getTransactionResultsByTracker(
-        transferTx.tracker(),
-        {
-            timeout: 5 * 60 * 1000
-        }
+    const tx = await sdk.rpc.chain.getTransactionByTracker(
+        transferTx.tracker()
     );
-    expect(transferTxResults.length).toBe(2);
-    expect(transferTxResults[1]).toBe(true);
+    expect(tx).not.toBeNull();
 }
 async function transferAssetUsingOther(
     mintTx: MintAsset,
@@ -215,12 +209,8 @@ async function transferAssetUsingOther(
         })
     );
 
-    const transferTxResults = await sdk.rpc.chain.getTransactionResultsByTracker(
-        transferTx.tracker(),
-        {
-            timeout: 5 * 60 * 1000
-        }
+    const tx = await sdk.rpc.chain.getTransactionByTracker(
+        transferTx.tracker()
     );
-    expect(transferTxResults.length).toBe(1);
-    expect(transferTxResults[0]).toBe(false);
+    expect(tx).toBeNull();
 }

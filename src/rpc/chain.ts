@@ -53,7 +53,7 @@ export class ChainRpc {
         return new Promise((resolve, reject) => {
             const bytes = tx.rlpBytes().toString("hex");
             this.rpc
-                .sendRpcRequest("chain_sendSignedTransaction", [`0x${bytes}`])
+                .sendRpcRequest("mempool_sendSignedTransaction", [`0x${bytes}`])
                 .then(result => {
                     try {
                         resolve(new H256(result));
@@ -160,52 +160,25 @@ export class ChainRpc {
     }
 
     /**
-     * Gets the transaction result of given tx.
+     * Queries whether the chain has the transaction of given tx.
      * @param hash The tx hash of which to get the corresponding tx of.
-     * @param options.timeout Indicating milliseconds to wait the tx to be confirmed.
-     * @returns boolean, or null when transaction of given hash not exists.
+     * @returns boolean when transaction of given hash not exists.
      */
-    public async getTransactionResult(
-        hash: H256Value,
-        options: { timeout?: number } = {}
-    ): Promise<boolean | null> {
+    public async containTransaction(hash: H256Value): Promise<boolean> {
         if (!H256.check(hash)) {
             throw Error(
-                `Expected the first argument of getTransactionResult to be an H256 value but found ${hash}`
+                `Expected the first argument of containTransaction to be an H256 value but found ${hash}`
             );
         }
-        const attemptToGet = async () => {
-            return this.rpc.sendRpcRequest("chain_getTransactionResult", [
-                `0x${H256.ensure(hash).value}`
-            ]);
-        };
-        const { timeout } = options;
-        if (
-            timeout !== undefined &&
-            (typeof timeout !== "number" || timeout < 0)
-        ) {
-            throw Error(
-                `Expected timeout param of getTransactionResult to be non-negative number but found ${timeout}`
-            );
-        }
-        const startTime = Date.now();
-        let result = await attemptToGet();
-        while (
-            result === null &&
-            timeout !== undefined &&
-            Date.now() - startTime < timeout
-        ) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            result = await attemptToGet();
-        }
-        if (result === null) {
-            return null;
-        }
+        const result = await this.rpc.sendRpcRequest(
+            "chain_containTransaction",
+            [`0x${H256.ensure(hash).value}`]
+        );
         try {
             return JSON.parse(result);
         } catch (e) {
             throw Error(
-                `Expected chain_getTransactionResult to return either null or JSON of boolean, but an error occurred: ${e.toString()}`
+                `Expected chain_containTransaction to return JSON of boolean, but an error occurred: ${e.toString()}`
             );
         }
     }
@@ -457,7 +430,7 @@ export class ChainRpc {
         }
         const attemptToGet = async () => {
             return this.rpc.sendRpcRequest(
-                "chain_getTransactionResultsByTracker",
+                "mempool_getTransactionResultsByTracker",
                 [`0x${H256.ensure(tracker).value}`]
             );
         };
@@ -487,7 +460,7 @@ export class ChainRpc {
             return result.map(JSON.parse);
         } catch (e) {
             throw Error(
-                `Expected chain_getTransactionResultsByTracker to return JSON of boolean[], but an error occurred: ${e.toString()}. received: ${JSON.stringify(
+                `Expected mempool_getTransactionResultsByTracker to return JSON of boolean[], but an error occurred: ${e.toString()}. received: ${JSON.stringify(
                     result
                 )}`
             );
@@ -554,7 +527,7 @@ export class ChainRpc {
         }
         return new Promise((resolve, reject) => {
             this.rpc
-                .sendRpcRequest("chain_getErrorHint", [
+                .sendRpcRequest("mempool_getErrorHint", [
                     `0x${H256.ensure(transactionHash).value}`
                 ])
                 .then(result => {
@@ -563,7 +536,7 @@ export class ChainRpc {
                     }
                     reject(
                         Error(
-                            `Expected chain_getErrorHint to return either null or value of string, but it returned ${result}`
+                            `Expected mempool_getErrorHint to return either null or value of string, but it returned ${result}`
                         )
                     );
                 })
@@ -981,7 +954,7 @@ export class ChainRpc {
         }
         return new Promise((resolve, reject) => {
             this.rpc
-                .sendRpcRequest("chain_getPendingTransactions", [from, to])
+                .sendRpcRequest("mempool_getPendingTransactions", [from, to])
                 .then(result => {
                     try {
                         const resultTransactions = result.transactions;
@@ -989,7 +962,7 @@ export class ChainRpc {
                         if (!Array.isArray(resultTransactions)) {
                             return reject(
                                 Error(
-                                    `Expected chain_getPendingTransactions to return an object whose property "transactions" is of array type but it is ${resultTransactions}`
+                                    `Expected mempool_getPendingTransactions to return an object whose property "transactions" is of array type but it is ${resultTransactions}`
                                 )
                             );
                         }
@@ -999,7 +972,7 @@ export class ChainRpc {
                         ) {
                             return reject(
                                 Error(
-                                    `Expected chain_getPendingTransactions to return an object containing a number but it returned ${resultLastTimestamp}`
+                                    `Expected mempool_getPendingTransactions to return an object containing a number but it returned ${resultLastTimestamp}`
                                 )
                             );
                         }
@@ -1012,7 +985,7 @@ export class ChainRpc {
                     } catch (e) {
                         reject(
                             Error(
-                                `Expected chain_getPendingTransactions to return an object who has transactions and lastTimestamp properties, but an error occurred: ${e.toString()}`
+                                `Expected mempool_getPendingTransactions to return an object who has transactions and lastTimestamp properties, but an error occurred: ${e.toString()}`
                             )
                         );
                     }
@@ -1179,7 +1152,7 @@ export class ChainRpc {
     public executeTransaction(
         tx: Transaction,
         sender: PlatformAddressValue
-    ): Promise<boolean> {
+    ): Promise<string | null> {
         if (!(tx instanceof Transaction)) {
             throw Error(
                 `Expected the first argument of executeTransaction to be a Transaction but found ${tx}`
@@ -1196,17 +1169,7 @@ export class ChainRpc {
                     tx.toJSON(),
                     PlatformAddress.ensure(sender).toString()
                 ])
-                .then(result => {
-                    if (typeof result === "boolean") {
-                        resolve(result);
-                    } else {
-                        reject(
-                            Error(
-                                `Expected chain_executeTransaction to return a boolean but it returned ${result}`
-                            )
-                        );
-                    }
-                })
+                .then(resolve)
                 .catch(reject);
         });
     }
@@ -1291,14 +1254,17 @@ export class ChainRpc {
         }
         return new Promise((resolve, reject) => {
             this.rpc
-                .sendRpcRequest("chain_getPendingTransactionsCount", [from, to])
+                .sendRpcRequest("mempool_getPendingTransactionsCount", [
+                    from,
+                    to
+                ])
                 .then(result => {
                     if (typeof result === "number") {
                         resolve(result);
                     } else {
                         reject(
                             Error(
-                                `Expected chain_getPendingTransactionsCount to return a number but returned ${result}`
+                                `Expected mempool_getPendingTransactionsCount to return a number but returned ${result}`
                             )
                         );
                     }
