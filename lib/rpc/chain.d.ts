@@ -51,14 +51,11 @@ export declare class ChainRpc {
      */
     getTransaction(hash: H256Value): Promise<SignedTransaction | null>;
     /**
-     * Gets the transaction result of given tx.
+     * Queries whether the chain has the transaction of given tx.
      * @param hash The tx hash of which to get the corresponding tx of.
-     * @param options.timeout Indicating milliseconds to wait the tx to be confirmed.
-     * @returns boolean, or null when transaction of given hash not exists.
+     * @returns boolean when transaction of given hash not exists.
      */
-    getTransactionResult(hash: H256Value, options?: {
-        timeout?: number;
-    }): Promise<boolean | null>;
+    containTransaction(hash: H256Value): Promise<boolean>;
     /**
      * Gets the regular key of an account of given address, recorded in the block of given blockNumber. If blockNumber is not given, then returns the regular key in the most recent block.
      * @param address An account address
@@ -230,7 +227,7 @@ export declare class ChainRpc {
      * @param sender A platform address of sender.
      * @returns True, if the transaction is executed successfully. False, if the transaction is not executed.
      */
-    executeTransaction(tx: Transaction, sender: PlatformAddressValue): Promise<boolean>;
+    executeTransaction(tx: Transaction, sender: PlatformAddressValue): Promise<string | null>;
     /**
      * Gets the id of the latest block.
      * @returns A number and the hash of the latest block.
