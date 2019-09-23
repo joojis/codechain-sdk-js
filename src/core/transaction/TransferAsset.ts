@@ -1,6 +1,5 @@
 import * as _ from "lodash";
 
-import { U64Value } from "codechain-primitives/lib";
 import {
     blake128,
     blake256,
@@ -9,14 +8,7 @@ import {
     SignatureTag
 } from "../../utils";
 import { Asset } from "../Asset";
-import {
-    AssetAddress,
-    H160,
-    H256,
-    Order,
-    OrderOnTransfer,
-    U64
-} from "../classes";
+import { AssetAddress, H160, H256, U64 } from "../classes";
 import { AssetTransaction, Transaction } from "../Transaction";
 import { AssetTransferOutputValue, NetworkId } from "../types";
 import {
@@ -27,7 +19,6 @@ import {
     AssetTransferOutput,
     AssetTransferOutputJSON
 } from "./AssetTransferOutput";
-import { OrderOnTransferJSON } from "./OrderOnTransfer";
 
 const RLP = require("rlp");
 
@@ -36,7 +27,6 @@ export interface AssetTransferTransactionJSON {
     burns: AssetTransferInputJSON[];
     inputs: AssetTransferInputJSON[];
     outputs: AssetTransferOutputJSON[];
-    orders: OrderOnTransferJSON[];
 }
 export interface TransferAssetActionJSON extends AssetTransferTransactionJSON {
     metadata: string;
@@ -54,7 +44,6 @@ export class TransferAsset extends Transaction implements AssetTransaction {
         burns: AssetTransferInput[];
         inputs: AssetTransferInput[];
         outputs: AssetTransferOutput[];
-        orders: OrderOnTransfer[];
         networkId: NetworkId;
         metadata: string | object;
         approvals: string[];
@@ -206,85 +195,6 @@ export class TransferAsset extends Transaction implements AssetTransaction {
     }
 
     /**
-     * Add an Order to create.
-     * @param params.order An order to apply to the transfer transaction.
-     * @param params.spentQuantity A spent quantity of the asset to give(from) while transferring.
-     * @param params.inputIndices The indices of inputs affected by the order
-     * @param params.outputIndices The indices of outputs affected by the order
-     */
-    public addOrder(params: {
-        order: Order;
-        spentQuantity: U64Value;
-        inputFromIndices: number[];
-        inputFeeIndices: number[];
-        outputFromIndices: number[];
-        outputToIndices: number[];
-        outputOwnedFeeIndices: number[];
-        outputTransferredFeeIndices: number[];
-    }) {
-        const {
-            order,
-            spentQuantity,
-            inputFromIndices = [],
-            inputFeeIndices = [],
-            outputFromIndices = [],
-            outputToIndices = [],
-            outputOwnedFeeIndices = [],
-            outputTransferredFeeIndices = []
-        } = params;
-        if (inputFromIndices.length === 0) {
-            throw Error(`inputFromIndices should not be empty`);
-        }
-        const inputIndices = inputFromIndices.concat(inputFeeIndices);
-        const outputIndices = outputFromIndices
-            .concat(outputToIndices)
-            .concat(outputOwnedFeeIndices)
-            .concat(outputTransferredFeeIndices);
-
-        for (const orderOnTx of this._transaction.orders) {
-            const setInputs = new Set(
-                orderOnTx.inputFromIndices.concat(orderOnTx.inputFeeIndices)
-            );
-            const setOutputs = new Set(
-                orderOnTx.outputFromIndices
-                    .concat(orderOnTx.outputToIndices)
-                    .concat(orderOnTx.outputOwnedFeeIndices)
-                    .concat(orderOnTx.outputTransferredFeeIndices)
-            );
-            const inputIntersection = inputIndices.filter(x =>
-                setInputs.has(x)
-            );
-            const outputIntersection = outputIndices.filter(x =>
-                setOutputs.has(x)
-            );
-            if (inputIntersection.length > 0 || outputIntersection.length > 0) {
-                throw Error(
-                    `inputIndices and outputIndices should not intersect with other orders: ${orderOnTx}`
-                );
-            }
-        }
-
-        // NOTE: Do not empty any of the indices
-        this._transaction.orders.push(
-            new OrderOnTransfer({
-                order,
-                spentQuantity: U64.ensure(spentQuantity),
-                inputFromIndices,
-                inputFeeIndices,
-                outputFromIndices,
-                outputToIndices,
-                outputOwnedFeeIndices,
-                outputTransferredFeeIndices
-            })
-        );
-        return this;
-    }
-
-    public orders(): OrderOnTransfer[] {
-        return this._transaction.orders;
-    }
-
-    /**
      * Get the output of the given index, of this transaction.
      * @param index An index indicating an output.
      * @returns An Asset.
@@ -342,12 +252,6 @@ export class TransferAsset extends Transaction implements AssetTransaction {
         let inputs: AssetTransferInput[];
         let outputs: AssetTransferOutput[];
 
-        if (
-            this._transaction.orders.length > 0 &&
-            (tag.input !== "all" || tag.output !== "all")
-        ) {
-            throw Error(`Partial signing is unavailable with orders`);
-        }
         if (tag.input === "all") {
             inputs = this._transaction.inputs.map(input =>
                 input.withoutScript()
@@ -385,7 +289,6 @@ export class TransferAsset extends Transaction implements AssetTransaction {
                     burns,
                     inputs,
                     outputs,
-                    orders: this._transaction.orders,
                     networkId
                 }).rlpBytes(),
                 Buffer.from(blake128(encodeSignatureTag(tag)), "hex")
@@ -425,7 +328,6 @@ interface AssetTransferTransactionData {
     burns: AssetTransferInput[];
     inputs: AssetTransferInput[];
     outputs: AssetTransferOutput[];
-    orders: OrderOnTransfer[];
     networkId: NetworkId;
 }
 
@@ -447,7 +349,6 @@ class AssetTransferTransaction {
     public readonly burns: AssetTransferInput[];
     public readonly inputs: AssetTransferInput[];
     public readonly outputs: AssetTransferOutput[];
-    public readonly orders: OrderOnTransfer[];
     public readonly networkId: NetworkId;
 
     /**
@@ -457,11 +358,10 @@ class AssetTransferTransaction {
      * @param params.networkId A network ID of the transaction.
      */
     constructor(params: AssetTransferTransactionData) {
-        const { burns, inputs, outputs, orders, networkId } = params;
+        const { burns, inputs, outputs, networkId } = params;
         this.burns = burns;
         this.inputs = inputs;
         this.outputs = outputs;
-        this.orders = orders;
         this.networkId = networkId;
     }
 
@@ -470,13 +370,12 @@ class AssetTransferTransaction {
      * @returns An AssetTransferTransaction JSON object.
      */
     public toJSON(): AssetTransferTransactionJSON {
-        const { networkId, burns, inputs, outputs, orders } = this;
+        const { networkId, burns, inputs, outputs } = this;
         return {
             networkId,
             burns: burns.map(input => input.toJSON()),
             inputs: inputs.map(input => input.toJSON()),
-            outputs: outputs.map(output => output.toJSON()),
-            orders: orders.map(order => order.toJSON())
+            outputs: outputs.map(output => output.toJSON())
         };
     }
 
@@ -490,7 +389,7 @@ class AssetTransferTransaction {
             this.burns.map(input => input.toEncodeObject()),
             this.inputs.map(input => input.toEncodeObject()),
             this.outputs.map(output => output.toEncodeObject()),
-            this.orders.map(order => order.toEncodeObject())
+            []
         ];
     }
 

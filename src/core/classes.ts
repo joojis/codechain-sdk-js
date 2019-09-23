@@ -25,8 +25,6 @@ export { WrapCCC } from "./transaction/WrapCCC";
 export { AssetOutPoint } from "./transaction/AssetOutPoint";
 export { AssetTransferInput, Timelock } from "./transaction/AssetTransferInput";
 export { AssetTransferOutput } from "./transaction/AssetTransferOutput";
-export { Order } from "./transaction/Order";
-export { OrderOnTransfer } from "./transaction/OrderOnTransfer";
 
 export { Asset } from "./Asset";
 export { AssetScheme } from "./AssetScheme";

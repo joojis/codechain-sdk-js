@@ -12,7 +12,6 @@ describe("examples", () => {
 
     const excludes = [
         "import-test-account",
-        "mint-and-transfer-with-order",
         "create-shard-and-mint",
         "create-shard-and-set-owners",
         "create-shard-and-set-users"

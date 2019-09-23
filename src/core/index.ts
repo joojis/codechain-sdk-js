@@ -30,8 +30,6 @@ import { CreateShard } from "./transaction/CreateShard";
 import { Custom } from "./transaction/Custom";
 import { IncreaseAssetSupply } from "./transaction/IncreaseAssetSupply";
 import { MintAsset } from "./transaction/MintAsset";
-import { Order } from "./transaction/Order";
-import { OrderOnTransfer } from "./transaction/OrderOnTransfer";
 import { Pay } from "./transaction/Pay";
 import { Remove } from "./transaction/Remove";
 import { SetRegularKey } from "./transaction/SetRegularKey";
@@ -389,197 +387,6 @@ export class Core {
         });
     }
 
-    public createOrder(
-        params: {
-            assetTypeFrom: H160Value;
-            assetTypeTo: H160Value;
-            assetTypeFee?: H160Value;
-            shardIdFrom: number;
-            shardIdTo: number;
-            shardIdFee?: number;
-            assetQuantityFrom: U64Value;
-            assetQuantityTo: U64Value;
-            assetQuantityFee?: U64Value;
-            originOutputs:
-                | AssetOutPoint[]
-                | {
-                      tracker: H256Value;
-                      index: number;
-                      assetType: H160Value;
-                      shardId: number;
-                      quantity: U64Value;
-                      lockScriptHash?: H256Value;
-                      parameters?: Buffer[];
-                  }[];
-            expiration: U64Value;
-        } & (
-            | {
-                  lockScriptHashFrom: H160Value;
-                  parametersFrom: Buffer[];
-              }
-            | {
-                  recipientFrom: AssetAddressValue;
-              }) &
-            (
-                | {
-                      lockScriptHashFee: H160Value;
-                      parametersFee: Buffer[];
-                  }
-                | {
-                      recipientFee: AssetAddressValue;
-                  }
-                | {})
-    ): Order {
-        const {
-            assetTypeFrom,
-            assetTypeTo,
-            assetTypeFee = H160.zero(),
-            shardIdFrom,
-            shardIdTo,
-            shardIdFee = 0,
-            assetQuantityFrom,
-            assetQuantityTo,
-            assetQuantityFee = 0,
-            originOutputs,
-            expiration
-        } = params;
-        checkAssetType(assetTypeFrom);
-        checkAssetType(assetTypeTo);
-        checkAssetType(assetTypeFee);
-        checkShardId(shardIdFrom);
-        checkShardId(shardIdTo);
-        checkShardId(shardIdFee);
-        checkAmount(assetQuantityFrom);
-        checkAmount(assetQuantityTo);
-        checkAmount(assetQuantityFee);
-        checkExpiration(expiration);
-        const originOutputsConv: AssetOutPoint[] = [];
-        for (let i = 0; i < originOutputs.length; i++) {
-            const originOutput = originOutputs[i];
-            const {
-                tracker,
-                index,
-                assetType,
-                shardId,
-                quantity,
-                lockScriptHash,
-                parameters
-            } = originOutput;
-            checkAssetOutPoint(originOutput);
-            originOutputsConv[i] =
-                originOutput instanceof AssetOutPoint
-                    ? originOutput
-                    : new AssetOutPoint({
-                          tracker: H256.ensure(tracker),
-                          index,
-                          assetType: H160.ensure(assetType),
-                          shardId,
-                          quantity: U64.ensure(quantity),
-                          lockScriptHash: lockScriptHash
-                              ? H160.ensure(lockScriptHash)
-                              : undefined,
-                          parameters
-                      });
-        }
-
-        const baseParams = {
-            assetTypeFrom: H160.ensure(assetTypeFrom),
-            assetTypeTo: H160.ensure(assetTypeTo),
-            assetTypeFee: H160.ensure(assetTypeFee),
-            shardIdFrom,
-            shardIdTo,
-            shardIdFee,
-            assetQuantityFrom: U64.ensure(assetQuantityFrom),
-            assetQuantityTo: U64.ensure(assetQuantityTo),
-            assetQuantityFee: U64.ensure(assetQuantityFee),
-            expiration: U64.ensure(expiration),
-            originOutputs: originOutputsConv
-        };
-        let toParams;
-        let feeParams;
-
-        if ("recipientFrom" in params) {
-            checkAssetAddressRecipient(params.recipientFrom);
-            toParams = {
-                recipientFrom: AssetAddress.ensure(params.recipientFrom)
-            };
-        } else {
-            const { lockScriptHashFrom, parametersFrom } = params;
-            checkLockScriptHash(lockScriptHashFrom);
-            checkParameters(parametersFrom);
-            toParams = {
-                lockScriptHashFrom: H160.ensure(lockScriptHashFrom),
-                parametersFrom
-            };
-        }
-
-        if ("recipientFee" in params) {
-            checkAssetAddressRecipient(params.recipientFee);
-            feeParams = {
-                recipientFee: AssetAddress.ensure(params.recipientFee)
-            };
-        } else if ("lockScriptHashFee" in params) {
-            const { lockScriptHashFee, parametersFee } = params;
-            checkLockScriptHash(lockScriptHashFee);
-            checkParameters(parametersFee);
-            feeParams = {
-                lockScriptHashFee: H160.ensure(lockScriptHashFee),
-                parametersFee
-            };
-        } else {
-            feeParams = {
-                lockScriptHashFee: H160.ensure("0".repeat(40)),
-                parametersFee: []
-            };
-        }
-
-        return new Order({
-            ...baseParams,
-            ...toParams,
-            ...feeParams
-        });
-    }
-    public createOrderOnTransfer(params: {
-        order: Order;
-        spentQuantity: U64Value;
-        inputFromIndices: number[];
-        inputFeeIndices: number[];
-        outputFromIndices: number[];
-        outputToIndices: number[];
-        outputOwnedFeeIndices: number[];
-        outputTransferredFeeIndices: number[];
-    }) {
-        const {
-            order,
-            spentQuantity,
-            inputFromIndices,
-            inputFeeIndices,
-            outputFromIndices,
-            outputToIndices,
-            outputOwnedFeeIndices,
-            outputTransferredFeeIndices
-        } = params;
-        checkOrder(order);
-        checkAmount(spentQuantity);
-        checkIndices(inputFromIndices);
-        checkIndices(inputFeeIndices);
-        checkIndices(outputFromIndices);
-        checkIndices(outputToIndices);
-        checkIndices(outputOwnedFeeIndices);
-        checkIndices(outputTransferredFeeIndices);
-
-        return new OrderOnTransfer({
-            order,
-            spentQuantity: U64.ensure(spentQuantity),
-            inputFromIndices,
-            inputFeeIndices,
-            outputFromIndices,
-            outputToIndices,
-            outputOwnedFeeIndices,
-            outputTransferredFeeIndices
-        });
-    }
-
     public createMintAssetTransaction(params: {
         scheme:
             | AssetScheme
@@ -730,7 +537,6 @@ export class Core {
         burns?: AssetTransferInput[];
         inputs?: AssetTransferInput[];
         outputs?: AssetTransferOutput[];
-        orders?: OrderOnTransfer[];
         networkId?: NetworkId;
         metadata?: string | object;
         approvals?: string[];
@@ -740,7 +546,6 @@ export class Core {
             burns = [],
             inputs = [],
             outputs = [],
-            orders = [],
             networkId = this.networkId,
             metadata = "",
             approvals = [],
@@ -755,7 +560,6 @@ export class Core {
             burns,
             inputs,
             outputs,
-            orders,
             networkId,
             metadata:
                 typeof metadata === "string"
@@ -951,14 +755,6 @@ function checkAmount(amount: U64Value) {
     }
 }
 
-function checkExpiration(expiration: U64Value) {
-    if (!U64.check(expiration)) {
-        throw Error(
-            `Expected expiration param to be a U64 value but found ${expiration}`
-        );
-    }
-}
-
 function checkKey(key: H512Value) {
     if (!H512.check(key)) {
         throw Error(`Expected key param to be an H512 value but found ${key}`);
@@ -1149,29 +945,6 @@ function checkAssetOutPoint(
     if (parameters) {
         checkParameters(parameters);
     }
-}
-
-function checkOrder(order: Order | null) {
-    if (order != null && !(order instanceof Order)) {
-        throw Error(
-            `Expected order param to be either null or an Order value but found ${order}`
-        );
-    }
-}
-
-function checkIndices(indices: Array<number>) {
-    if (!Array.isArray(indices)) {
-        throw Error(
-            `Expected indices param to be an array but found ${indices}`
-        );
-    }
-    indices.forEach((value, idx) => {
-        if (typeof value !== "number") {
-            throw Error(
-                `Expected an indices to be an array of numbers but found ${value} at index ${idx}`
-            );
-        }
-    });
 }
 
 function checkLockScriptHash(value: H160Value) {

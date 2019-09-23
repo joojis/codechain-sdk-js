@@ -6,7 +6,6 @@ function createTransferAsset(): TransferAsset {
         inputs: [],
         burns: [],
         outputs: [],
-        orders: [],
         metadata: "metadata",
         approvals: [],
         expiration: null,

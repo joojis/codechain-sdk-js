@@ -16,7 +16,6 @@ import { CreateShard } from "./CreateShard";
 import { Custom } from "./Custom";
 import { IncreaseAssetSupply } from "./IncreaseAssetSupply";
 import { MintAsset } from "./MintAsset";
-import { OrderOnTransfer } from "./OrderOnTransfer";
 import { Pay } from "./Pay";
 import { Remove } from "./Remove";
 import { SetRegularKey } from "./SetRegularKey";
@@ -110,13 +109,11 @@ export function fromJSONToTransaction(result: any): Transaction {
             const burns = action.burns.map(AssetTransferInput.fromJSON);
             const inputs = action.inputs.map(AssetTransferInput.fromJSON);
             const outputs = action.outputs.map(AssetTransferOutput.fromJSON);
-            const orders = action.orders.map(OrderOnTransfer.fromJSON);
             tx = new TransferAsset({
                 networkId,
                 burns,
                 inputs,
                 outputs,
-                orders,
                 metadata,
                 approvals,
                 expiration
